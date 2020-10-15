@@ -1,11 +1,25 @@
-all: hhee_analysis clean
-	echo compile complete!
+export
+SRCDIR := $(CURDIR)/libs
+OUTDIR := $(CURDIR)/out
+objs := $(patsubst %.c, %.o, $(wildcard $(SRCDIR)/*.c))
+CFLAGS := -g
+CFLAGS += -I$(CURDIR)/include/
 
-include src/Makefile
+.PHONY: default
+default: src clean
 
-hhee_analysis: $(obj-y)
-	cc -o hhee_analysis $(obj-y)
+.PHONY: src
+src:
+	make -C src/
+	make install -C src/
+
+.PHONY: test
+test: src
+	make -C test/
+	make install -C test/
+	./test.sh
+	make clean
 
 .PHONY: clean
 clean:
-	rm $(obj-y)
+	-find -name "*.o" | xargs rm

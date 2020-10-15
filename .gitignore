@@ -2,3 +2,6 @@ cscope.in.out
 cscope.out
 cscope.po.out
 hhee_analysis
+test_analyzer
+
+out/
