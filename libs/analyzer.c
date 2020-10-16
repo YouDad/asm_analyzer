@@ -108,6 +108,9 @@ struct instruction get_instruction_by_line(uint32_t line)
 /* get_instructions_by_address
  * 返回从start_address开始的连续指令块
  * 并且把遇到的跳转指令存到address_queue中 */
+/* retval < 0: error code
+ * retval = 0: success
+ * retval > 0: no error, but failed */
 int get_instructions_by_address(uint32_t start_address,
 		struct list_head *address_queue,
 		struct instructions *retval)
@@ -179,9 +182,14 @@ int get_instructions_by_address(uint32_t start_address,
 
 	vector_fixup(instrs);
 
-	retval->ip = instrs;
-	retval->start_address = start_address;
-	retval->end_address = start_address + vector_size(instrs) * 4 - 4;
+	if (vector_size(instrs)) {
+		retval->ip = instrs;
+		retval->start_address = start_address;
+		retval->end_address = start_address + vector_size(instrs) * 4 - 4;
+		return 0;
+	} else {
+		return 1;
+	}
 
 	return 0;
 }

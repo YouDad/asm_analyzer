@@ -9,7 +9,7 @@ int test(int sa, int ea, int *ja, int jlen)
 	struct instructions instrs;
 
 	int ret = get_instructions_by_address(sa, &address_queue, &instrs);
-	if (ret) {
+	if (ret < 0) {
 		printf("get_instructions_by_address return failed(%d)\n", ret);
 		return 1;
 	}
