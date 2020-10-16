@@ -4,29 +4,7 @@
 
 char *str_pool;
 vector_define(char *, lines);
-
-/* visited is a bitmap */
-static unsigned int *visited;
-void init_visited(int size)
-{
-	visited = MALLOC(typeof(*visited),
-			size / (sizeof(typeof(*visited)) * 8));
-	memset(visited, 0, size / 8);
-}
-void visit(int bit)
-{
-	visited[bit / (sizeof(typeof(*visited)) * 8)] |=
-		1 << (bit % (sizeof(typeof(*visited)) * 8));
-}
-int is_visited(int bit)
-{
-	return visited[bit / (sizeof(typeof(*visited)) * 8)] &
-		(1 << (bit % (sizeof(typeof(*visited)) * 8)));
-}
-void fini_visited()
-{
-	free(visited);
-}
+static bitmap_define(visited);
 
 int analyzer_load(char *filename)
 {
@@ -54,6 +32,7 @@ int analyzer_load(char *filename)
 	}
 
 	vector_fixup(lines);
+	bitmap_init(&visited, vector_size(lines));
 
 	return 0;
 }
@@ -62,6 +41,7 @@ void analyzer_clean()
 {
 	vector_fini(lines);
 	free(str_pool);
+	bitmap_fini(visited);
 }
 
 int get_address_by_line(int line)
@@ -140,10 +120,10 @@ int get_instructions_by_address(int start_address,
 	vector_init(instrs);
 
 	int line = get_line_by_address(start_address);
-	while (!is_visited(line)) {
+	while (!bitmap_get(visited, line)) {
 		struct instruction i = get_instruction_by_line(line);
 		vector_push(instrs, i);
-		visit(line++);
+		bitmap_set(visited, line++);
 
 		int is_jump_instr = strstr(i.string, "cbnz") == i.string;
 		is_jump_instr += strstr(i.string, "cbz") == i.string;

@@ -9,5 +9,3 @@ int get_instructions_by_address(int start_address,
 		struct instructions *retval);
 void analyzer_clean();
 struct instruction get_instruction_by_line(int line);
-void init_visited(int size);
-void fini_visited();

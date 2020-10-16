@@ -5,7 +5,6 @@
 
 int test(int sa, int ea, int *ja, int jlen)
 {
-	init_visited(32000);
 	LIST_HEAD(address_queue);
 	struct instructions instrs;
 
@@ -40,7 +39,6 @@ int test(int sa, int ea, int *ja, int jlen)
 		i++;
 	}
 
-	fini_visited();
 	return 0;
 }
 
