@@ -44,7 +44,7 @@ void analyzer_clean()
 	bitmap_fini(visited);
 }
 
-int get_address_by_line(int line)
+int get_address_by_line(uint32_t line)
 {
 	char buf[4];
 	int address;
@@ -56,7 +56,7 @@ int get_address_by_line(int line)
 	return -1;
 }
 
-int get_line_by_address(int address)
+int get_line_by_address(uint32_t address)
 {
 	int l = 0, r = vector_size(lines) - 1;
 	while (get_address_by_line(l) < 0) {
@@ -87,7 +87,7 @@ int get_line_by_address(int address)
 	return -1;
 }
 
-struct instruction get_instruction_by_line(int line)
+struct instruction get_instruction_by_line(uint32_t line)
 {
 	struct instruction i;
 	char instr[128];
@@ -108,7 +108,7 @@ struct instruction get_instruction_by_line(int line)
 /* get_instructions_by_address
  * 返回从start_address开始的连续指令块
  * 并且把遇到的跳转指令存到address_queue中 */
-int get_instructions_by_address(int start_address,
+int get_instructions_by_address(uint32_t start_address,
 		struct list_head *address_queue,
 		struct instructions *retval)
 {
