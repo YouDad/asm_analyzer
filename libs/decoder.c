@@ -124,24 +124,46 @@ int get_instruction_block_by_address(uint32_t start_address,
 	int line = get_line_by_address(start_address);
 	while (!bitmap_get(&visited, line)) {
 		struct instruction i = get_instruction_by_line(line);
+		int is_jump_instr;
 		vector_push(instrs, i);
 		bitmap_set(&visited, line++);
 
-		int is_jump_instr = strstr(i.string, "cbnz") == i.string;
+		is_jump_instr = strstr(i.string, "cbnz") == i.string;
 		is_jump_instr += strstr(i.string, "cbz") == i.string;
-		is_jump_instr += strstr(i.string, "tbnz") == i.string;
-		is_jump_instr += strstr(i.string, "tbz") == i.string;
 
 		if (is_jump_instr) {
-			// cbnz, cbz, tbnz, tbz
+			// cbnz, cbz
 			uint32_t new_address;
 			int ret = sscanf(i.string, "%*s%*s%x", &new_address);
 			if (ret != 1) {
+				printf("get new_address failed: %x %s", i.address, i.string);
 				return -EINTERNAL;
 			}
 
 			uint32_list_insert_tail(address_queue, new_address);
 			continue;
+		}
+
+		is_jump_instr = strstr(i.string, "tbnz") == i.string;
+		is_jump_instr += strstr(i.string, "tbz") == i.string;
+
+		if (is_jump_instr) {
+			// tbnz, tbz
+			uint32_t new_address;
+			int ret = sscanf(i.string, "%*s%*s%*s%x", &new_address);
+			if (ret != 1) {
+				printf("get new_address failed: %x %s", i.address, i.string);
+				return -EINTERNAL;
+			}
+
+			uint32_list_insert_tail(address_queue, new_address);
+			continue;
+		}
+
+		is_jump_instr = strstr(i.string, "ret") == i.string;
+		is_jump_instr += strstr(i.string, "eret") == i.string;
+		if (is_jump_instr) {
+			break;
 		}
 
 		if (i.string[0] == 'b') {
@@ -155,6 +177,7 @@ int get_instruction_block_by_address(uint32_t start_address,
 				uint32_t new_address;
 				int ret = sscanf(i.string, "%*s%x", &new_address);
 				if (ret != 1) {
+					printf("get new_address failed: %x %s", i.address, i.string);
 					return -EINTERNAL;
 				}
 				uint32_list_insert_tail(address_queue, new_address);
@@ -165,12 +188,6 @@ int get_instruction_block_by_address(uint32_t start_address,
 					continue;
 				}
 			}
-		}
-
-		is_jump_instr = strstr(i.string, "ret") == i.string;
-		is_jump_instr += strstr(i.string, "eret") == i.string;
-		if (is_jump_instr) {
-			break;
 		}
 	}
 
