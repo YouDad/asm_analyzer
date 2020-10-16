@@ -1,11 +1,13 @@
+targets := $(wildcard */)
+
 .PHONY: default
 default:
-	make -C analyzer/
+	for target in $(targets); do \
+		make -C $${target}/; \
+	done
 
 .PHONY: install
 install:
-	make install -C analyzer/
-
-.PHONY: clean
-clean:
-	@-make clean -C analyzer/
+	for target in $(targets); do \
+		make install -C $${target}/; \
+	done

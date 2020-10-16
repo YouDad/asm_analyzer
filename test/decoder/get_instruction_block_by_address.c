@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "types.h"
 #include "uint32_list_item.h"
-#include "analyzer.h"
+#include "decoder.h"
 
 int test(int sa, int ea, int *ja, int jlen)
 {
@@ -44,7 +44,7 @@ int test(int sa, int ea, int *ja, int jlen)
 
 int main()
 {
-	int ret = analyzer_load("hhee.s");
+	int ret = decoder_load("hhee.s");
 	if (ret) {
 		perror("load file hhee.s");
 		return ret;

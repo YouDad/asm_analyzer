@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <string.h>
-#include "analyzer.h"
+#include "decoder.h"
 
 int main()
 {
-	int ret = analyzer_load("hhee.s");
+	int ret = decoder_load("hhee.s");
 	if (ret) {
 		perror("load file hhee.s");
 		return ret;

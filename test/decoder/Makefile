@@ -10,7 +10,3 @@ default: $(test_objs) $(objs)
 .PHONY: install
 install:
 	mv *.test $(OUTDIR)/
-
-.PHONY: clean
-clean:
-	@-rm *.o

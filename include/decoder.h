@@ -1,7 +1,7 @@
 #include "types.h"
 vector_define_extern(char *, lines);
 
-int analyzer_load(char *filename);
+int decoder_load(char *filename);
 void analyzer_clean();
 int get_address_by_line(uint32_t line);
 int get_line_by_address(uint32_t address);

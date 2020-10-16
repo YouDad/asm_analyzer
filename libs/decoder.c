@@ -1,12 +1,12 @@
 #include "common.h"
 #include "types.h"
-#include "analyzer.h"
+#include "decoder.h"
 
 char *str_pool;
 vector_define(char *, lines);
 static bitmap_define(visited);
 
-int analyzer_load(char *filename)
+int decoder_load(char *filename)
 {
 	FILE *fp = fopen(filename, "r");
 	if (!fp) {

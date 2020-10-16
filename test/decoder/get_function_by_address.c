@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "analyzer.h"
+#include "decoder.h"
 
 int test(int addr, int *sa, int *ea, int len)
 {
@@ -38,7 +38,7 @@ int test(int addr, int *sa, int *ea, int len)
 
 int main()
 {
-	int ret = analyzer_load("hhee.s");
+	int ret = decoder_load("hhee.s");
 	if (ret) {
 		perror("load file hhee.s");
 		return ret;
