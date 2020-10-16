@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include "types.h"
-#include "uint32_list_item.h"
 #include "decoder.h"
 
 int test(int sa, int ea, int *ja, int jlen)

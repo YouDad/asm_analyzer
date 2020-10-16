@@ -1,5 +1,4 @@
 #include "common.h"
-#include "types.h"
 #include "decoder.h"
 
 char *str_pool;
