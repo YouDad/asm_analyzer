@@ -3,7 +3,7 @@
 
 char *str_pool;
 vector_define(char *, lines);
-static bitmap_define(visited);
+static struct bitmap visited;
 
 int decoder_load(char *filename)
 {
@@ -31,7 +31,7 @@ int decoder_load(char *filename)
 	}
 
 	vector_fixup(lines);
-	bitmap_init(&visited, vector_size(lines));
+	bitmap_init(vector_size(lines), &visited);
 
 	return 0;
 }
@@ -40,7 +40,7 @@ void analyzer_clean()
 {
 	vector_fini(lines);
 	free(str_pool);
-	bitmap_fini(visited);
+	bitmap_fini(&visited);
 }
 
 int get_address_by_line(uint32_t line)
@@ -122,10 +122,10 @@ int get_instruction_block_by_address(uint32_t start_address,
 	vector_init(instrs);
 
 	int line = get_line_by_address(start_address);
-	while (!bitmap_get(visited, line)) {
+	while (!bitmap_get(&visited, line)) {
 		struct instruction i = get_instruction_by_line(line);
 		vector_push(instrs, i);
-		bitmap_set(visited, line++);
+		bitmap_set(&visited, line++);
 
 		int is_jump_instr = strstr(i.string, "cbnz") == i.string;
 		is_jump_instr += strstr(i.string, "cbz") == i.string;
@@ -199,6 +199,7 @@ int get_function_by_address(uint32_t start_address,
 	LIST_HEAD(queue);
 	LIST_HEAD(tmp_i10s_list);
 	uint32_list_insert_tail(&queue, start_address);
+	bitmap_clear(&visited);
 
 	while (!list_empty(&queue)) {
 		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
