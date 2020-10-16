@@ -22,4 +22,4 @@ test: src
 
 .PHONY: clean
 clean:
-	-find -name "*.o" | xargs rm
+	-find -name "*.o" | xargs rm -f
