@@ -105,15 +105,15 @@ struct instruction get_instruction_by_line(uint32_t line)
 	return i;
 }
 
-/* get_instructions_by_address
+/* get_instruction_block_by_address
  * 返回从start_address开始的连续指令块
  * 并且把遇到的跳转指令存到address_queue中 */
 /* retval < 0: error code
  * retval = 0: success
  * retval > 0: no error, but failed */
-int get_instructions_by_address(uint32_t start_address,
+int get_instruction_block_by_address(uint32_t start_address,
 		struct list_head *address_queue,
-		struct instructions *retval)
+		struct instruction_block *retval)
 {
 	if (start_address % 4) {
 		return -EINVAL;
@@ -195,7 +195,7 @@ int get_instructions_by_address(uint32_t start_address,
 }
 
 int get_function_by_address(uint32_t start_address,
-		struct list_head *instructions_list)
+		struct list_head *instruction_block_list)
 {
 	if (start_address % 4) {
 		return -EINVAL;
@@ -207,10 +207,10 @@ int get_function_by_address(uint32_t start_address,
 	uint32_list_insert_tail(&queue, start_address);
 
 	while (!list_empty(&queue)) {
-		struct instructions *i10s = MALLOC(struct instructions, 1);
+		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
 		int addr = uint32_list_pop_head(&queue);
 
-		ret = get_instructions_by_address(addr, &queue, i10s);
+		ret = get_instruction_block_by_address(addr, &queue, i10s);
 		if (ret < 0) {
 			free(i10s);
 			return ret;
@@ -226,7 +226,7 @@ int get_function_by_address(uint32_t start_address,
 	}
 
 	while (!list_empty(&tmp_i10s_list)) {
-		struct instructions *item, *tmp, *min_item;
+		struct instruction_block *item, *tmp, *min_item;
 		uint32_t min_address = 0xffffffff;
 
 		list_for_each_entry_safe(item, tmp, &tmp_i10s_list, list) {
@@ -238,12 +238,12 @@ int get_function_by_address(uint32_t start_address,
 
 		list_del(&min_item->list);
 
-		item = list_last_entry(instructions_list, struct instructions, list);
-		if (can_merge_instructions(item, min_item)) {
-			merge_instructions(item, min_item);
-			release_instructions(min_item);
+		item = list_last_entry(instruction_block_list, struct instruction_block, list);
+		if (can_merge_instruction_block(item, min_item)) {
+			merge_instruction_block(item, min_item);
+			release_instruction_block(min_item);
 		} else {
-			list_insert_tail(&min_item->list, instructions_list);
+			list_insert_tail(&min_item->list, instruction_block_list);
 		}
 	}
 

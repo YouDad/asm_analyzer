@@ -6,19 +6,19 @@
 int test(int sa, int ea, int *ja, int jlen)
 {
 	LIST_HEAD(address_queue);
-	struct instructions instrs;
+	struct instruction_block ib;
 
-	int ret = get_instructions_by_address(sa, &address_queue, &instrs);
+	int ret = get_instruction_block_by_address(sa, &address_queue, &ib);
 	if (ret < 0) {
-		printf("get_instructions_by_address return failed(%d)\n", ret);
+		printf("get_instruction_block_by_address return failed(%d)\n", ret);
 		return 1;
 	}
 
-	if (instrs.start_address != sa) {
+	if (ib.start_address != sa) {
 		printf("start_address assert failed(%x)\n", sa);
 		return 2;
 	}
-	if (instrs.end_address != ea) {
+	if (ib.end_address != ea) {
 		printf("end_address assert failed(%x)\n", ea);
 		return 3;
 	}
