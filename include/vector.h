@@ -32,6 +32,10 @@
 
 #define vector_fixup(vector)                                            \
 	do {                                                                \
+		if (vector##_cnt == 0) {                                        \
+			vector = 0;                                                 \
+			break;                                                      \
+		}                                                               \
 		void *new_ptr = REALLOC(vector, typeof(*vector), vector##_cnt); \
 		if (!new_ptr) {                                                 \
 			return -ENOMEM;                                             \
