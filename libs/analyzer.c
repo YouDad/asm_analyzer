@@ -193,3 +193,59 @@ int get_instructions_by_address(uint32_t start_address,
 
 	return 0;
 }
+
+int get_function_by_address(uint32_t start_address,
+		struct list_head *instructions_list)
+{
+	if (start_address % 4) {
+		return -EINVAL;
+	}
+
+	int ret = 0;
+	LIST_HEAD(queue);
+	LIST_HEAD(tmp_i10s_list);
+	uint32_list_insert_tail(&queue, start_address);
+
+	while (!list_empty(&queue)) {
+		struct instructions *i10s = MALLOC(struct instructions, 1);
+		int addr = uint32_list_pop_head(&queue);
+
+		ret = get_instructions_by_address(addr, &queue, i10s);
+		if (ret < 0) {
+			free(i10s);
+			return ret;
+		}
+
+		if (ret > 0) {
+			free(i10s);
+			continue;
+		}
+
+		INIT_LIST_HEAD(&i10s->list);
+		list_insert_tail(&i10s->list, &tmp_i10s_list);
+	}
+
+	while (!list_empty(&tmp_i10s_list)) {
+		struct instructions *item, *tmp, *min_item;
+		uint32_t min_address = 0xffffffff;
+
+		list_for_each_entry_safe(item, tmp, &tmp_i10s_list, list) {
+			if (item->start_address < min_address) {
+				min_address = item->start_address;
+				min_item = item;
+			}
+		}
+
+		list_del(&min_item->list);
+
+		item = list_last_entry(instructions_list, struct instructions, list);
+		if (can_merge_instructions(item, min_item)) {
+			merge_instructions(item, min_item);
+			release_instructions(min_item);
+		} else {
+			list_insert_tail(&min_item->list, instructions_list);
+		}
+	}
+
+	return 0;
+}
