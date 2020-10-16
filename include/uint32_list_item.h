@@ -15,7 +15,7 @@ static inline void uint32_list_insert_head(struct list_head *head, uint32_t x)
 		malloc(sizeof(struct uint32_list_item));
 	INIT_LIST_HEAD(&add_address->list);
 	add_address->item = x;
-	list_add(&add_address->list, head);
+	list_insert_head(&add_address->list, head);
 }
 
 static inline void uint32_list_insert_tail(struct list_head *head, uint32_t x)

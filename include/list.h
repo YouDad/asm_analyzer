@@ -30,9 +30,14 @@ static inline void __list_add(struct list_head *_new,
 	prev->next = _new;
 }
 
-static inline void list_add(struct list_head *_new, struct list_head *head)
+static inline void list_insert_head(struct list_head *_new, struct list_head *head)
 {
 	__list_add(_new, head, head->next);
+}
+
+static inline void list_insert_tail(struct list_head *_new, struct list_head *head)
+{
+	__list_add(_new, head->prev, head);
 }
 
 static inline void __list_del(struct list_head *prev, struct list_head *next)
