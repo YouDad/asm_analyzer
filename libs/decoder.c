@@ -151,24 +151,19 @@ int get_instruction_block_by_address(uint32_t start_address,
 			}
 
 			// b, b.cond
-			if (i.string[1] == '\t') {
+			if (i.string[1] == '\t' || i.string[1] == '.') {
 				uint32_t new_address;
 				int ret = sscanf(i.string, "%*s%x", &new_address);
 				if (ret != 1) {
 					return -EINTERNAL;
 				}
 				uint32_list_insert_tail(address_queue, new_address);
-				break;
-			}
 
-			if (i.string[1] == '.') {
-				uint32_t new_address;
-				int ret = sscanf(i.string, "%*s%x", &new_address);
-				if (ret != 1) {
-					return -EINTERNAL;
+				if (i.string[1] == '\t') {
+					break;
+				} else {
+					continue;
 				}
-				uint32_list_insert_tail(address_queue, new_address);
-				continue;
 			}
 		}
 
