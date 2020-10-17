@@ -5,3 +5,4 @@
 #include "types/uint32_list_item.h"
 #include "types/bitmap.h"
 #include "types/instruction.h"
+#include "types/map.h"

@@ -1,7 +1,7 @@
 export
-SRCDIR := $(CURDIR)/libs
 OUTDIR := $(CURDIR)/out
-objs := $(patsubst %.c, %.o, $(wildcard $(SRCDIR)/*.c))
+objs := $(patsubst %.c, %.o, $(wildcard $(CURDIR)/libs/*.c))
+objs += $(patsubst %.c, %.o, $(wildcard $(CURDIR)/utils/*.c))
 CFLAGS := -g
 CFLAGS += -I$(CURDIR)/include/
 
