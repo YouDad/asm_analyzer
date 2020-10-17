@@ -87,7 +87,9 @@
 			vector = new_ptr;                                               \
 		}                                                                   \
 	} while (0);                                                            \
-	for (int i = 0; i < cnt; i++) {                                         \
-		vector[vector##_cnt++] = val;                                       \
+	int _cnt = cnt;                                                         \
+	int _val = val;                                                         \
+	for (int i = 0; i < _cnt; i++) {                                        \
+		vector[vector##_cnt++] = _val;                                      \
 	}                                                                       \
 } while (0)
