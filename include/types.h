@@ -6,3 +6,4 @@
 #include "types/bitmap.h"
 #include "types/instruction.h"
 #include "types/map.h"
+#include "types/graph.h"
