@@ -1,13 +1,12 @@
-targets := $(wildcard */)
+test_objs := $(patsubst %.c, %.o, $(shell find * -name "*.c"))
 
 .PHONY: default
-default:
-	for target in $(targets); do \
-		make -C $${target}/; \
-	done
+default: $(test_objs) $(objs)
+	for object in $(shell find * -name "*.c" | sed 's/\.c//;'); do \
+		filename=`echo $${object} | sed 's/\//./;'`; \
+		cc -o $${filename}.test $${object}.o $(objs); \
+	done;
 
 .PHONY: install
 install:
-	for target in $(targets); do \
-		make install -C $${target}/; \
-	done
+	mv *.test $(OUTDIR)/; \
