@@ -1,5 +1,5 @@
 #include "common.h"
-#include "decoder.h"
+#include "libs/decoder.h"
 
 char *str_pool;
 vector_define(char *, lines);

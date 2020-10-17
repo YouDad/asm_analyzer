@@ -1,4 +1,5 @@
 #include "types.h"
+
 vector_define_extern(char *, lines);
 
 int decoder_load(char *filename);

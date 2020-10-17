@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "decoder.h"
+#include "libs/decoder.h"
 
 int test(int addr, int *sa, int *ea, int len)
 {

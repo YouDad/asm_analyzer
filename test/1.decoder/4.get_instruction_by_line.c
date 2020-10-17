@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "decoder.h"
+#include "libs/decoder.h"
 
 int main()
 {
