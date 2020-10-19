@@ -70,3 +70,18 @@ void get_dest_funcs(struct uint32_list *addr_list)
 {
 	addr_graph_get_dst_node(addr_list);
 }
+
+int get_caller_by_addr(uint32_t addr, struct uint32_list *caller_addr_list)
+{
+	struct addr_edge i;
+	int _ret, caller_addr;
+
+	addr_graph_caller_for_each(i, _ret, addr, caller_addr) {
+		uint32_list_push(caller_addr_list, caller_addr);
+	}
+	if (_ret) {
+		return _ret;
+	}
+
+	return 0;
+}
