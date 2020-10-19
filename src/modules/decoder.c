@@ -212,7 +212,7 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 	return 0;
 }
 
-int get_function_by_addr(uint32_t start_addr,
+int get_func_by_addr(uint32_t start_addr,
 		struct list_head *instruction_block_list)
 {
 	if (start_addr % 4) {

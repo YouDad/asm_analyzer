@@ -6,7 +6,7 @@ int get_callee_by_addr(uint32_t addr,
 {
 	LIST_HEAD(iblist);
 
-	int ret = get_function_by_addr(addr, &iblist);
+	int ret = get_func_by_addr(addr, &iblist);
 	if (ret) {
 		return ret;
 	}
