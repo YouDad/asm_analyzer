@@ -1,3 +1,4 @@
+#include "common.h"
 #include "types.h"
 
 vector_define_extern(char *, lines);

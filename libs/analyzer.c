@@ -1,4 +1,3 @@
-#include "common.h"
 #include "libs/analyzer.h"
 
 int get_called_func_by_address(uint32_t address,

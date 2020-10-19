@@ -1,4 +1,3 @@
-#include "common.h"
 #include "libs/decoder.h"
 
 char *str_pool;
