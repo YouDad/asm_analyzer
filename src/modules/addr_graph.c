@@ -4,6 +4,10 @@ map_define(int, int, addr2node);
 map_define(int, int, node2addr);
 struct graph callee; // caller -> callee
 struct graph caller; // callee -> caller
+vector_struct_define(int, in);
+vector_struct_define(int, out);
+uint32_list_define(src_node);
+uint32_list_define(dst_node);
 int node_cnt;
 
 void addr_graph_init()
@@ -12,6 +16,8 @@ void addr_graph_init()
 	map_init(node2addr);
 	graph_init(&callee);
 	graph_init(&caller);
+	vector_init(in);
+	vector_init(out);
 	node_cnt = 0;
 }
 
@@ -21,6 +27,8 @@ void addr_graph_fini()
 	map_fini(node2addr);
 	graph_fini(&callee);
 	graph_fini(&caller);
+	vector_fini(in);
+	vector_fini(out);
 }
 
 int _addr_graph_get_nodeid(int addr)
@@ -39,6 +47,12 @@ int addr_graph_add_call(int caller_addr, int callee_addr)
 {
 	int callee_nodeid = _addr_graph_get_nodeid(callee_addr);
 	int caller_nodeid = _addr_graph_get_nodeid(caller_addr);
+
+	vector_expand(in, callee_nodeid, 0);
+	vector_expand(out, caller_nodeid, 0);
+	in[callee_nodeid]++;
+	out[caller_nodeid]++;
+
 	int ret = graph_addedge(&callee, caller_nodeid, callee_nodeid);
 	if (ret) {
 		return ret;
@@ -56,6 +70,25 @@ int addr_graph_fixup()
 	}
 
 	ret = graph_fixup(&caller);
+	if (ret) {
+		return ret;
+	}
+
+	vector_fixup(in);
+	vector_fixup(out);
+
+	for (int i = 0; i < vector_size(in); i++) {
+		if (in[i] == 0) {
+			uint32_list_push(&src_node, i);
+		}
+	}
+
+	for (int i = 0; i < vector_size(out); i++) {
+		if (out[i] == 0) {
+			uint32_list_push(&dst_node, i);
+		}
+	}
+
 	return ret;
 }
 
