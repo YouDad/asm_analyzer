@@ -1,8 +1,7 @@
 #include "modules/analyzer.h"
 #include "modules/addr_graph.h"
 
-int get_callee_by_addr(uint32_t addr,
-		struct uint32_list *callee_addr_list)
+int get_callee_by_addr(uint32_t addr, struct uint32_list *callee_addr_list)
 {
 	LIST_HEAD(iblist);
 
