@@ -82,3 +82,81 @@ int get_caller_by_addr(uint32_t addr, struct uint32_list *caller_addr_list)
 
 	return 0;
 }
+
+static int _regs_affected_by_addr(uint32_t addr, uint32_t *arg_regs, uint32_t *write_regs)
+{
+	struct instruction_block ib;
+	uint32_list_define(aq);
+	int ret = get_inst_block_by_addr_until_jump(addr, &aq, &ib);
+	if (ret < 0) {
+		return ret;
+	}
+	if (ret > 0) {
+		return 0;
+	}
+
+	for (struct instruction *i = ib.ip; 1; i++) {
+		uint32_list_define(r);
+		uint32_list_define(w);
+		ret = regs_affected_by_inst(i, &r, &w);
+		if (ret) {
+			printf("process failed: \"\033[32m%s\033[0m\"\n", i->string);
+		}
+
+		while (!uint32_list_empty(&r)) {
+			int x = uint32_list_pop(&r);
+			if (!(*write_regs & (1 << x))) {
+				*arg_regs |= 1 << x;
+			}
+		}
+
+		while (!uint32_list_empty(&w)) {
+			int x = uint32_list_pop(&w);
+			*write_regs |= 1 << x;
+		}
+
+		if (i->addr >= ib.end_addr) {
+			break;
+		}
+	}
+
+	uint32_list_define(args);
+	uint32_list_define(writes);
+
+	while (!uint32_list_empty(&aq)) {
+		int jump_addr = uint32_list_pop(&aq);
+		uint32_t arg = *arg_regs;
+		uint32_t write = *write_regs;
+		struct bitmap now;
+		save_visited(&now);
+		ret = _regs_affected_by_addr(jump_addr, &arg, &write);
+		load_visited(&now);
+		if (ret) {
+			goto exit;
+		}
+
+		uint32_list_push(&args, arg);
+		uint32_list_push(&writes, write);
+	}
+
+exit:
+	while (!uint32_list_empty(&args)) {
+		*arg_regs |= uint32_list_pop(&args);
+	}
+	while (!uint32_list_empty(&writes)) {
+		*write_regs |= uint32_list_pop(&writes);
+	}
+	return 0;
+}
+
+int get_arg_regs_by_addr(uint32_t addr, uint32_t *arg_regs)
+{
+	uint32_t write_regs = 0;
+	*arg_regs = 0;
+	struct bitmap now;
+	save_visited(&now);
+	clear_visited();
+	int ret = _regs_affected_by_addr(addr, arg_regs, &write_regs);
+	load_visited(&now);
+	return ret;
+}

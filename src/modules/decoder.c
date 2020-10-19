@@ -107,24 +107,16 @@ struct instruction get_instruction_by_line(uint32_t line)
 	return i;
 }
 
-/* get_instruction_block_by_addr
- * 返回从start_addr开始的连续指令块
- * 并且把遇到的跳转指令存到addr_queue中 */
-/* retval < 0: error code
- * retval = 0: success
- * retval > 0: no error, but failed */
-int get_instruction_block_by_addr(uint32_t start_addr,
-		struct uint32_list *addr_queue,
-		struct instruction_block *retval)
+int _get_ib_by_addr(uint32_t addr, bool until_jump, struct uint32_list *aq, struct instruction_block *rv)
 {
-	if (start_addr % 4) {
+	if (addr % 4) {
 		return -EINVAL;
 	}
 
 	vector_define(struct instruction, instrs);
 	vector_init(instrs);
 
-	int line = get_line_by_addr(start_addr);
+	int line = get_line_by_addr(addr);
 	if (line < 0) {
 		return -ENOADDR;
 	}
@@ -147,8 +139,13 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 				return -EINTERNAL;
 			}
 
-			uint32_list_push(addr_queue, new_addr);
-			continue;
+			uint32_list_push(aq, new_addr);
+			if (until_jump) {
+				uint32_list_push(aq, i.addr + 4);
+				break;
+			} else {
+				continue;
+			}
 		}
 
 		is_jump_instr = strstr(i.string, "tbnz") == i.string;
@@ -163,8 +160,13 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 				return -EINTERNAL;
 			}
 
-			uint32_list_push(addr_queue, new_addr);
-			continue;
+			uint32_list_push(aq, new_addr);
+			if (until_jump) {
+				uint32_list_push(aq, i.addr + 4);
+				break;
+			} else {
+				continue;
+			}
 		}
 
 		is_jump_instr = strstr(i.string, "ret") == i.string;
@@ -187,13 +189,17 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 					printf("get new_addr failed: %x %s", i.addr, i.string);
 					return -EINTERNAL;
 				}
-				uint32_list_push(addr_queue, new_addr);
+				uint32_list_push(aq, new_addr);
 
 				if (i.string[1] == '\t') {
+					break;
+				} else if (until_jump) {
+					uint32_list_push(aq, i.addr + 4);
 					break;
 				} else {
 					continue;
 				}
+
 			}
 		}
 	}
@@ -201,15 +207,54 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 	vector_fixup(instrs);
 
 	if (vector_size(instrs)) {
-		retval->ip = instrs;
-		retval->start_addr = start_addr;
-		retval->end_addr = start_addr + vector_size(instrs) * 4 - 4;
+		rv->ip = instrs;
+		rv->start_addr = addr;
+		rv->end_addr = addr + vector_size(instrs) * 4 - 4;
 		return 0;
 	} else {
 		return 1;
 	}
 
 	return 0;
+}
+
+int get_inst_block_by_addr_until_jump(uint32_t start_addr,
+		struct uint32_list *addr_queue,
+		struct instruction_block *retval)
+{
+	return _get_ib_by_addr(start_addr, true, addr_queue, retval);
+}
+
+/* get_instruction_block_by_addr
+ * 返回从start_addr开始的连续指令块
+ * 并且把遇到的跳转指令存到addr_queue中 */
+/* retval < 0: error code
+ * retval = 0: success
+ * retval > 0: no error, but failed */
+int get_instruction_block_by_addr(uint32_t start_addr,
+		struct uint32_list *addr_queue,
+		struct instruction_block *retval)
+{
+	return _get_ib_by_addr(start_addr, false, addr_queue, retval);
+}
+
+void clear_visited()
+{
+	bitmap_clear(&visited);
+}
+
+void save_visited(struct bitmap *bm)
+{
+	bitmap_init(vector_size(lines), bm);
+	bm->len = visited.len;
+	memcpy(bm->ptr, visited.ptr, visited.len * sizeof(*visited.ptr));
+}
+
+void load_visited(struct bitmap *bm)
+{
+	visited.len = bm->len;
+	memcpy(visited.ptr, bm->ptr, visited.len * sizeof(*visited.ptr));
+	bitmap_fini(bm);
 }
 
 int get_func_by_addr(uint32_t start_addr, int clear,

@@ -1,5 +1,6 @@
 #pragma once
 #include "types/list.h"
+#include "types/uint32_list.h"
 
 struct instruction {
 	int addr;
@@ -20,3 +21,5 @@ void print_instruction_block(struct instruction_block *ib);
 void release_instruction_block(struct instruction_block *ib);
 int can_merge_instruction_block(struct instruction_block *prev, struct instruction_block *next);
 void merge_instruction_block(struct instruction_block *prev, struct instruction_block *next);
+
+int regs_affected_by_inst(struct instruction *i, struct uint32_list *r, struct uint32_list *w);
