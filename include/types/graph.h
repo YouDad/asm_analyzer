@@ -33,15 +33,6 @@ struct graph {
 	vector_struct_define(int, head);
 };
 
-static inline int _check_head(struct graph *g, int x)
-{
-	x++;
-	if (x > vector_size(g->head)) {
-		vector_pushs(g->head, x - vector_size(g->head), -1);
-	}
-	return 0;
-}
-
 static inline void graph_init(struct graph *g)
 {
 	vector_struct_init(g->edges);
@@ -50,11 +41,8 @@ static inline void graph_init(struct graph *g)
 
 static inline int graph_addedge(struct graph *g, int u, int v)
 {
-	int ret = _check_head(g, u);
-	if (ret) return ret;
-
-	ret = _check_head(g, v);
-	if (ret) return ret;
+	vector_expand(g->head, u, -1);
+	vector_expand(g->head, v, -1);
 
 	struct edge e = { v, g->head[u] };
 	g->head[u] = vector_size(g->edges);

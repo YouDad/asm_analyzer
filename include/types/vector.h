@@ -74,20 +74,20 @@
 	vector[vector##_cnt++] = val;                                       \
 })
 
-#define vector_pushs(vector, cnt, val) do {                                 \
-	do {                                                                    \
-		while (vector##_cnt + cnt > vector##_max) {                         \
-			vector##_max *= 2;                                              \
-			void *new_ptr = REALLOC(vector, typeof(*vector), vector##_max); \
-			if (!new_ptr) {                                                 \
-				return -ENOMEM;                                             \
-			}                                                               \
-			vector = new_ptr;                                               \
-		}                                                                   \
-	} while (0);                                                            \
-	int _cnt = cnt;                                                         \
-	int _val = val;                                                         \
-	for (int i = 0; i < _cnt; i++) {                                        \
-		vector[vector##_cnt++] = _val;                                      \
-	}                                                                       \
+#define vector_expand(id, cnt, val) do {                        \
+	int _cnt = ((cnt) + 1);                                     \
+	int _val = (val);                                           \
+	if (_cnt > vector_size(id)) {                               \
+		if (_cnt > id##_max) {                                  \
+			id##_max = _cnt * 2;                                \
+			void *new_ptr = REALLOC(id, typeof(*id), id##_max); \
+			if (!new_ptr) {                                     \
+				return -ENOMEM;                                 \
+			}                                                   \
+			id = new_ptr;                                       \
+		}                                                       \
+		while (id##_cnt <= _cnt) {                                \
+			id[id##_cnt++] = _val;                              \
+		}                                                       \
+	}                                                           \
 } while (0)
