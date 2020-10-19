@@ -15,7 +15,10 @@ src:
 
 .PHONY: test
 test: src
+	make clean
 	make -C test/
+	rm -rf $(OUTDIR)
+	mkdir -p $(OUTDIR)
 	make install -C test/
 	./test.sh
 	make clean
