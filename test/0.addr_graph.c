@@ -1,4 +1,4 @@
-#include "types/addr_graph.h"
+#include "modules/addr_graph.h"
 #include <stdio.h>
 
 int test(int addr, int assert_callee_addr_sum, int assert_caller_addr_sum)
