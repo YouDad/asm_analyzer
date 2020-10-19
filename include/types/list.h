@@ -15,10 +15,18 @@ static inline void INIT_LIST_HEAD(struct list_head *list)
 #define LIST_HEAD(name) \
 	struct list_head name = LIST_HEAD_INIT(name)
 
+#ifdef container_of
+#undef container_of
+#endif
 #define container_of(ptr, type, member) ({                 \
 	const __typeof__(((type *)0)->member) *__mptr = (ptr); \
 	(type *)((char *)__mptr - offsetof(type, member));      \
 })
+
+#ifdef offsetof
+#undef offsetof
+#endif
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 
 static inline void __list_add(struct list_head *_new, 
 		struct list_head *prev,
