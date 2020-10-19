@@ -45,7 +45,9 @@ int init_call_graph(struct uint32_list *addr_queue)
 		uint32_list_define(aq);
 
 		int ret = get_callee_by_address(caller_addr, &aq);
-		if (ret) {
+		if (ret == -ENOADDR) {
+			printf("caller_addr: %x, cannot found\n", caller_addr);
+		} else if (ret) {
 			return ret;
 		}
 

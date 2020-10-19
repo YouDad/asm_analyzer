@@ -10,3 +10,4 @@
 #define REALLOC(ptr, type, number) (type *)realloc((ptr), (number) * sizeof(type))
 
 #define EINTERNAL 0x1000 + 0
+#define ENOADDR   0x1000 + 1

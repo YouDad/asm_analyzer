@@ -60,10 +60,11 @@ int get_address_by_line(uint32_t line)
 	int address;
 
 	int ret = sscanf(lines[line], "%x%[:]", &address, buf);
-	if (ret == 2) {
-		return address;
+	if (ret != 2) {
+		printf("FATAL ERROR: sscanf (%s) return != 2\n", lines[line]);
+		exit(0);
 	}
-	return -1;
+	return address;
 }
 
 int get_line_by_address(uint32_t address)
@@ -74,9 +75,6 @@ int get_line_by_address(uint32_t address)
 	while (l <= r) {
 		int mid = (l + r)/2;
 		int line = get_address_by_line(mid);
-		if (line == -1) {
-			return -2;
-		}
 
 		if (line == address) {
 			return mid;
@@ -127,6 +125,10 @@ int get_instruction_block_by_address(uint32_t start_address,
 	vector_init(instrs);
 
 	int line = get_line_by_address(start_address);
+	if (line < 0) {
+		return -ENOADDR;
+	}
+
 	while (!bitmap_get(&visited, line)) {
 		struct instruction i = get_instruction_by_line(line);
 		int is_jump_instr;
