@@ -62,18 +62,16 @@
 	
 #define vector_size(vector) ({ vector##_cnt; })
 
-#define vector_push(vector, val) ({                                         \
-	do {                                                                    \
-		if (vector##_cnt >= vector##_max) {                                 \
-			vector##_max *= 2;                                              \
-			void *new_ptr = REALLOC(vector, typeof(*vector), vector##_max); \
-			if (!new_ptr) {                                                 \
-				return -ENOMEM;                                             \
-			}                                                               \
-			vector = new_ptr;                                               \
-		}                                                                   \
-	} while (0);                                                            \
-	vector[vector##_cnt++] = val;                                           \
+#define vector_push(vector, val) ({                                     \
+	if (vector##_cnt >= vector##_max) {                                 \
+		vector##_max *= 2;                                              \
+		void *new_ptr = REALLOC(vector, typeof(*vector), vector##_max); \
+		if (!new_ptr) {                                                 \
+			return -ENOMEM;                                             \
+		}                                                               \
+		vector = new_ptr;                                               \
+	}                                                                   \
+	vector[vector##_cnt++] = val;                                       \
 })
 
 #define vector_pushs(vector, cnt, val) do {                                 \
