@@ -223,7 +223,6 @@ int get_function_by_address(uint32_t start_address,
 	uint32_list_define(queue);
 	LIST_HEAD(tmp_i10s_list);
 	uint32_list_push(&queue, start_address);
-	bitmap_clear(&visited);
 
 	while (!uint32_list_empty(&queue)) {
 		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
