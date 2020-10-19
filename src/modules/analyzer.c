@@ -1,12 +1,12 @@
 #include "modules/analyzer.h"
 #include "modules/addr_graph.h"
 
-int get_callee_by_address(uint32_t address,
+int get_callee_by_addr(uint32_t addr,
 		struct uint32_list *callee_addr_list)
 {
 	LIST_HEAD(iblist);
 
-	int ret = get_function_by_address(address, &iblist);
+	int ret = get_function_by_addr(addr, &iblist);
 	if (ret) {
 		return ret;
 	}
@@ -18,14 +18,14 @@ int get_callee_by_address(uint32_t address,
 		while (1) {
 			if (strstr(i->string, "bl\t") == i->string) {
 				// bl <addr>
-				uint32_t new_address;
-				int ret = sscanf(i->string, "%*s%x", &new_address);
+				uint32_t new_addr;
+				int ret = sscanf(i->string, "%*s%x", &new_addr);
 				if (ret != 1) {
 					return -EINTERNAL;
 				}
-				uint32_list_push(callee_addr_list, new_address);
+				uint32_list_push(callee_addr_list, new_addr);
 			}
-			if (i->address < item->end_address) {
+			if (i->addr < item->end_addr) {
 				i++;
 			} else {
 				break;
@@ -44,7 +44,7 @@ int init_call_graph(struct uint32_list *addr_queue)
 		uint32_t caller_addr = uint32_list_pop(addr_queue);
 		uint32_list_define(aq);
 
-		int ret = get_callee_by_address(caller_addr, &aq);
+		int ret = get_callee_by_addr(caller_addr, &aq);
 		if (ret == -ENOADDR) {
 			printf("caller_addr: %x, cannot found\n", caller_addr);
 		} else if (ret) {

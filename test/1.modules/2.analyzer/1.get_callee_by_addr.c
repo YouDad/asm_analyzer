@@ -44,9 +44,9 @@ int test(int addr, int *a, int alen)
 {
 	uint32_list_define(callee_addrs);
 
-	int ret = get_callee_by_address(addr, &callee_addrs);
+	int ret = get_callee_by_addr(addr, &callee_addrs);
 	if (ret) {
-		printf("get_callee_by_address failed(%d)\n", ret);
+		printf("get_callee_by_addr failed(%d)\n", ret);
 		return 1;
 	}
 
@@ -59,7 +59,7 @@ int test(int addr, int *a, int alen)
 
 		uint32_t addr = uint32_list_pop(&callee_addrs);
 		if (a[i] != addr) {
-			printf("address assert failed(%x, %x)\n", a[i], addr);
+			printf("addr assert failed(%x, %x)\n", a[i], addr);
 			return 3;
 		}
 

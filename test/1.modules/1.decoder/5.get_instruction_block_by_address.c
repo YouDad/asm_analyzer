@@ -3,33 +3,33 @@
 
 int test(int sa, int ea, int *ja, int jlen)
 {
-	uint32_list_define(address_queue);
+	uint32_list_define(addr_queue);
 	struct instruction_block ib;
 
-	int ret = get_instruction_block_by_address(sa, &address_queue, &ib);
+	int ret = get_instruction_block_by_addr(sa, &addr_queue, &ib);
 	if (ret < 0) {
-		printf("get_instruction_block_by_address return failed(%d)\n", ret);
+		printf("get_instruction_block_by_addr return failed(%d)\n", ret);
 		return 1;
 	}
 
-	if (ib.start_address != sa) {
-		printf("start_address assert failed(%x)\n", sa);
+	if (ib.start_addr != sa) {
+		printf("start_addr assert failed(%x)\n", sa);
 		return 2;
 	}
-	if (ib.end_address != ea) {
-		printf("end_address assert failed(%x)\n", ea);
+	if (ib.end_addr != ea) {
+		printf("end_addr assert failed(%x)\n", ea);
 		return 3;
 	}
 
 	int i = 0;
-	while (!uint32_list_empty(&address_queue)) {
+	while (!uint32_list_empty(&addr_queue)) {
 		if (i >= jlen) {
-			printf("jump_address length assert failed(%d)\n", jlen);
+			printf("jump_addr length assert failed(%d)\n", jlen);
 			return 4;
 		}
-		int addr = uint32_list_pop(&address_queue);
+		int addr = uint32_list_pop(&addr_queue);
 		if (addr != ja[i]) {
-			printf("jump_address assert failed(%x, %x)\n", ja[i], addr);
+			printf("jump_addr assert failed(%x, %x)\n", ja[i], addr);
 			return 5;
 		}
 		i++;

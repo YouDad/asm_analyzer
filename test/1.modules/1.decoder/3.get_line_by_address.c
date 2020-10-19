@@ -10,23 +10,23 @@ int main()
 		return ret;
 	}
 
-	if (get_line_by_address(0x3f77c) != 30959) {
+	if (get_line_by_addr(0x3f77c) != 30959) {
 		return 1;
 	}
 
-	if (get_line_by_address(0) != 0) {
+	if (get_line_by_addr(0) != 0) {
 		return 2;
 	}
 
-	if (get_line_by_address(-4) != -1) {
+	if (get_line_by_addr(-4) != -1) {
 		return 3;
 	}
 
-	if (get_line_by_address(8) != 2) {
+	if (get_line_by_addr(8) != 2) {
 		return 4;
 	}
 
-	if (get_line_by_address(9) != -1) {
+	if (get_line_by_addr(9) != -1) {
 		return 5;
 	}
 

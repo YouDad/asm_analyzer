@@ -54,33 +54,33 @@ void decoder_unload()
 	bitmap_fini(&visited);
 }
 
-int get_address_by_line(uint32_t line)
+int get_addr_by_line(uint32_t line)
 {
 	char buf[4];
-	int address;
+	int addr;
 
-	int ret = sscanf(lines[line], "%x%[:]", &address, buf);
+	int ret = sscanf(lines[line], "%x%[:]", &addr, buf);
 	if (ret != 2) {
 		printf("FATAL ERROR: sscanf (%s) return != 2\n", lines[line]);
 		exit(0);
 	}
-	return address;
+	return addr;
 }
 
-int get_line_by_address(uint32_t address)
+int get_line_by_addr(uint32_t addr)
 {
 	int l = 0, r = vector_size(lines) - 1;
 
 	int ret;
 	while (l <= r) {
 		int mid = (l + r)/2;
-		int line = get_address_by_line(mid);
+		int line = get_addr_by_line(mid);
 
-		if (line == address) {
+		if (line == addr) {
 			return mid;
 		}
 
-		if (line > address) {
+		if (line > addr) {
 			r = mid - 1;
 		} else {
 			l = mid + 1;
@@ -94,7 +94,7 @@ struct instruction get_instruction_by_line(uint32_t line)
 	struct instruction i;
 	char instr[128];
 	sscanf(lines[line], "%x:%x\t %[^/]",
-			&i.address, &i.code, instr);
+			&i.addr, &i.code, instr);
 
 	char *p = instr + strlen(instr) - 1;
 	while (*p <= ' ') {
@@ -107,24 +107,24 @@ struct instruction get_instruction_by_line(uint32_t line)
 	return i;
 }
 
-/* get_instruction_block_by_address
- * 返回从start_address开始的连续指令块
- * 并且把遇到的跳转指令存到address_queue中 */
+/* get_instruction_block_by_addr
+ * 返回从start_addr开始的连续指令块
+ * 并且把遇到的跳转指令存到addr_queue中 */
 /* retval < 0: error code
  * retval = 0: success
  * retval > 0: no error, but failed */
-int get_instruction_block_by_address(uint32_t start_address,
-		struct uint32_list *address_queue,
+int get_instruction_block_by_addr(uint32_t start_addr,
+		struct uint32_list *addr_queue,
 		struct instruction_block *retval)
 {
-	if (start_address % 4) {
+	if (start_addr % 4) {
 		return -EINVAL;
 	}
 
 	vector_define(struct instruction, instrs);
 	vector_init(instrs);
 
-	int line = get_line_by_address(start_address);
+	int line = get_line_by_addr(start_addr);
 	if (line < 0) {
 		return -ENOADDR;
 	}
@@ -140,14 +140,14 @@ int get_instruction_block_by_address(uint32_t start_address,
 
 		if (is_jump_instr) {
 			// cbnz, cbz
-			uint32_t new_address;
-			int ret = sscanf(i.string, "%*s%*s%x", &new_address);
+			uint32_t new_addr;
+			int ret = sscanf(i.string, "%*s%*s%x", &new_addr);
 			if (ret != 1) {
-				printf("get new_address failed: %x %s", i.address, i.string);
+				printf("get new_addr failed: %x %s", i.addr, i.string);
 				return -EINTERNAL;
 			}
 
-			uint32_list_push(address_queue, new_address);
+			uint32_list_push(addr_queue, new_addr);
 			continue;
 		}
 
@@ -156,14 +156,14 @@ int get_instruction_block_by_address(uint32_t start_address,
 
 		if (is_jump_instr) {
 			// tbnz, tbz
-			uint32_t new_address;
-			int ret = sscanf(i.string, "%*s%*s%*s%x", &new_address);
+			uint32_t new_addr;
+			int ret = sscanf(i.string, "%*s%*s%*s%x", &new_addr);
 			if (ret != 1) {
-				printf("get new_address failed: %x %s", i.address, i.string);
+				printf("get new_addr failed: %x %s", i.addr, i.string);
 				return -EINTERNAL;
 			}
 
-			uint32_list_push(address_queue, new_address);
+			uint32_list_push(addr_queue, new_addr);
 			continue;
 		}
 
@@ -181,13 +181,13 @@ int get_instruction_block_by_address(uint32_t start_address,
 
 			// b, b.cond
 			if (i.string[1] == '\t' || i.string[1] == '.') {
-				uint32_t new_address;
-				int ret = sscanf(i.string, "%*s%x", &new_address);
+				uint32_t new_addr;
+				int ret = sscanf(i.string, "%*s%x", &new_addr);
 				if (ret != 1) {
-					printf("get new_address failed: %x %s", i.address, i.string);
+					printf("get new_addr failed: %x %s", i.addr, i.string);
 					return -EINTERNAL;
 				}
-				uint32_list_push(address_queue, new_address);
+				uint32_list_push(addr_queue, new_addr);
 
 				if (i.string[1] == '\t') {
 					break;
@@ -202,8 +202,8 @@ int get_instruction_block_by_address(uint32_t start_address,
 
 	if (vector_size(instrs)) {
 		retval->ip = instrs;
-		retval->start_address = start_address;
-		retval->end_address = start_address + vector_size(instrs) * 4 - 4;
+		retval->start_addr = start_addr;
+		retval->end_addr = start_addr + vector_size(instrs) * 4 - 4;
 		return 0;
 	} else {
 		return 1;
@@ -212,23 +212,23 @@ int get_instruction_block_by_address(uint32_t start_address,
 	return 0;
 }
 
-int get_function_by_address(uint32_t start_address,
+int get_function_by_addr(uint32_t start_addr,
 		struct list_head *instruction_block_list)
 {
-	if (start_address % 4) {
+	if (start_addr % 4) {
 		return -EINVAL;
 	}
 
 	int ret = 0;
 	uint32_list_define(queue);
 	LIST_HEAD(tmp_i10s_list);
-	uint32_list_push(&queue, start_address);
+	uint32_list_push(&queue, start_addr);
 
 	while (!uint32_list_empty(&queue)) {
 		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
 		int addr = uint32_list_pop(&queue);
 
-		ret = get_instruction_block_by_address(addr, &queue, i10s);
+		ret = get_instruction_block_by_addr(addr, &queue, i10s);
 		if (ret < 0) {
 			free(i10s);
 			return ret;
@@ -245,11 +245,11 @@ int get_function_by_address(uint32_t start_address,
 
 	while (!list_empty(&tmp_i10s_list)) {
 		struct instruction_block *item, *tmp, *min_item;
-		uint32_t min_address = 0xffffffff;
+		uint32_t min_addr = 0xffffffff;
 
 		list_for_each_entry_safe(item, tmp, &tmp_i10s_list, list) {
-			if (item->start_address < min_address) {
-				min_address = item->start_address;
+			if (item->start_addr < min_addr) {
+				min_addr = item->start_addr;
 				min_item = item;
 			}
 		}

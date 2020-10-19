@@ -6,26 +6,26 @@ int test(int addr, int *sa, int *ea, int len)
 	LIST_HEAD(i10s_list);
 	struct instruction_block *item, *tmp;
 
-	int ret = get_function_by_address(addr, &i10s_list);
+	int ret = get_function_by_addr(addr, &i10s_list);
 	if (ret) {
-		printf("get_function_by_address failed(%d)\n", ret);
+		printf("get_function_by_addr failed(%d)\n", ret);
 		return 1;
 	}
 
 	int i = 0;
 	list_for_each_entry_safe(item, tmp, &i10s_list, list) {
 		if (i >= len) {
-			printf("address length assert failed(%d)\n", len);
+			printf("addr length assert failed(%d)\n", len);
 			print_instruction_block(item);
 			return 2;
 		}
-		if (item->start_address != sa[i]) {
-			printf("start_address assert failed(%x, %x)\n", sa[i], item->start_address);
+		if (item->start_addr != sa[i]) {
+			printf("start_addr assert failed(%x, %x)\n", sa[i], item->start_addr);
 			print_instruction_block(item);
 			return 3;
 		}
-		if (item->end_address != ea[i]) {
-			printf("end_address assert failed(%x, %x)\n", ea[i], item->end_address);
+		if (item->end_addr != ea[i]) {
+			printf("end_addr assert failed(%x, %x)\n", ea[i], item->end_addr);
 			print_instruction_block(item);
 			return 4;
 		}
