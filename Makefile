@@ -1,7 +1,7 @@
 export
 OUTDIR := $(CURDIR)/out
-objs := $(patsubst %.c, %.o, $(wildcard $(CURDIR)/modules/*.c))
-objs += $(patsubst %.c, %.o, $(wildcard $(CURDIR)/utils/*.c))
+objs := $(patsubst %.c, %.o, $(wildcard $(CURDIR)/src/modules/*.c))
+objs += $(patsubst %.c, %.o, $(wildcard $(CURDIR)/src/utils/*.c))
 CFLAGS := -g
 CFLAGS += -I$(CURDIR)/include/
 
