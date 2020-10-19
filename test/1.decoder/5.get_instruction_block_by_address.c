@@ -66,6 +66,6 @@ int main()
 		return ret;
 	}
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }

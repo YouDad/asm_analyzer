@@ -36,7 +36,7 @@ int main()
 		return 3;
 	}
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }
 

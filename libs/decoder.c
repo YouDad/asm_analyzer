@@ -36,7 +36,7 @@ int decoder_load(char *filename)
 	return 0;
 }
 
-void analyzer_clean()
+void decoder_unload()
 {
 	vector_fini(lines);
 	free(str_pool);

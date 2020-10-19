@@ -53,6 +53,6 @@ int main()
 		return 11;
 	}
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }

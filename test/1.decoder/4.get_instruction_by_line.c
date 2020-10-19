@@ -32,6 +32,6 @@ int main()
 	if (instr.code != 0x00def002) return 14;
 	if (strcmp(".inst\t0x00def002 ; undefined", instr.string) != 0) return 15;
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }

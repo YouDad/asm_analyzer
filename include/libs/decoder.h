@@ -3,7 +3,7 @@
 vector_define_extern(char *, lines);
 
 int decoder_load(char *filename);
-void analyzer_clean();
+void decoder_unload();
 int get_address_by_line(uint32_t line);
 int get_line_by_address(uint32_t address);
 struct instruction get_instruction_by_line(uint32_t line);

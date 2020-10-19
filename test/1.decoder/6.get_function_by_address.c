@@ -67,6 +67,6 @@ int main()
 	ret = test(0xbb64, sa4, ea4, sizeof(sa4));
 	if (ret) return ret;
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }

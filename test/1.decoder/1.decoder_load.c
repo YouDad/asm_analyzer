@@ -18,6 +18,6 @@ int main()
 		return 2;
 	}
 
-	analyzer_clean();
+	decoder_unload();
 	return 0;
 }
