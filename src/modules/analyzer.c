@@ -16,7 +16,7 @@ int get_callee_by_address(uint32_t address,
 		struct instruction *i = item->ip;
 
 		while (1) {
-			if (strstr(i->string, "bl") == i->string) {
+			if (strstr(i->string, "bl\t") == i->string) {
 				// bl <addr>
 				uint32_t new_address;
 				int ret = sscanf(i->string, "%*s%x", &new_address);
