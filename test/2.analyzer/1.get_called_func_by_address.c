@@ -1,4 +1,4 @@
-#include "libs/analyzer.h"
+#include "modules/analyzer.h"
 
 int test(int addr, int *a, int alen);
 int main()

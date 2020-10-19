@@ -1,4 +1,4 @@
-#include "libs/decoder.h"
+#include "modules/decoder.h"
 
 char *str_pool;
 vector_define(char *, lines);

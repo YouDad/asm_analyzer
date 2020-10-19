@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "libs/decoder.h"
+#include "modules/decoder.h"
 
 int test(int sa, int ea, int *ja, int jlen)
 {
