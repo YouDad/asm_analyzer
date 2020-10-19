@@ -2,6 +2,7 @@
 #include "common.h"
 #include "types/map.h"
 #include "types/graph.h"
+#include "types/uint32_list.h"
 
 struct addr_edge {
 	struct edge *e;
@@ -15,6 +16,7 @@ void addr_graph_init();
 void addr_graph_fini();
 int addr_graph_add_call(int caller_addr, int callee_addr);
 int addr_graph_fixup();
+void addr_graph_get_dst_node(struct uint32_list *list);
 
 /* 遍历addr地址的函数所调用的函数
  * i,_ret,callee_addr需要提前定义

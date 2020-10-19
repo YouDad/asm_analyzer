@@ -92,6 +92,13 @@ int addr_graph_fixup()
 	return ret;
 }
 
+void addr_graph_get_dst_node(struct uint32_list *list)
+{
+	uint32_list_foreach(iter, dst_node) {
+		uint32_list_push(list, iter->item);
+	}
+}
+
 int addr_graph_callee_first(int addr, struct addr_edge *ae)
 {
 	int nodeid = _addr_graph_get_nodeid(addr);

@@ -66,3 +66,8 @@ void fini_call_graph()
 {
 	addr_graph_fini();
 }
+
+void get_dest_funcs(struct uint32_list *addr_list)
+{
+	addr_graph_get_dst_node(addr_list);
+}

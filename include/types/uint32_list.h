@@ -44,3 +44,10 @@ static inline uint32_t uint32_list_pop(struct uint32_list *list)
 
 	return ret;
 }
+
+#define uint32_list_foreach(iter, uint32_list)                                      \
+	for (struct uint32_list_item *iter =                                            \
+			list_first_entry(&((uint32_list).head), struct uint32_list_item, list); \
+			&iter->list != &((uint32_list).head);                                   \
+			iter = list_next_entry(iter, list)                                      \
+	)
