@@ -10,11 +10,11 @@ int main()
 		return ret;
 	}
 
-	if (vector_size(lines) != 31028) {
+	if (vector_size(lines) != 30960) {
 		return 1;
 	}
 
-	if (strstr(lines[31025], "00fef002") == 0) {
+	if (strstr(lines[30958], "00fef002") == 0) {
 		return 2;
 	}
 

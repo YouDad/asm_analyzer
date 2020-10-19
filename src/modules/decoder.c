@@ -21,12 +21,24 @@ int decoder_load(char *filename)
 
 	vector_init(lines);
 
-	vector_push(lines, str_pool);
 	char *p = str_pool;
 	while (p < str_pool + fsize) {
-		while (*p++ != '\n');
-		vector_push(lines, p);
-		p[-1] = 0;
+		char *line_head = p;
+
+		int have_colon_in = 0;
+		for (int hex = 0; *p != '\n'; p++) {
+			hex += ('0' <= p[0] && p[0] <= '9');
+			hex += ('a' <= p[0] && p[0] <= 'f');
+			hex += ('A' <= p[0] && p[0] <= 'F');
+			have_colon_in += hex && p[1] == ':' && p[2] != '\n';
+		}
+
+		if (have_colon_in) {
+			vector_push(lines, line_head);
+		}
+
+		p[0] = 0;
+		p++;
 	}
 
 	vector_fixup(lines);
@@ -57,12 +69,6 @@ int get_address_by_line(uint32_t line)
 int get_line_by_address(uint32_t address)
 {
 	int l = 0, r = vector_size(lines) - 1;
-	while (get_address_by_line(l) < 0) {
-		l++;
-	}
-	while (get_address_by_line(r) < 0) {
-		r--;
-	}
 
 	int ret;
 	while (l <= r) {

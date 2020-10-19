@@ -10,11 +10,11 @@ int main()
 		return ret;
 	}
 
-	if (get_line_by_address(0x3f77c) != 31026) {
+	if (get_line_by_address(0x3f77c) != 30959) {
 		return 1;
 	}
 
-	if (get_line_by_address(0) != 7) {
+	if (get_line_by_address(0) != 0) {
 		return 2;
 	}
 
@@ -22,7 +22,7 @@ int main()
 		return 3;
 	}
 
-	if (get_line_by_address(8) != 9) {
+	if (get_line_by_address(8) != 2) {
 		return 4;
 	}
 
