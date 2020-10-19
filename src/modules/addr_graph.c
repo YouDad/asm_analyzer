@@ -94,8 +94,10 @@ int addr_graph_fixup()
 
 void addr_graph_get_dst_node(struct uint32_list *list)
 {
+	int addr;
 	uint32_list_foreach(iter, dst_node) {
-		uint32_list_push(list, iter->item);
+		map_get(node2addr, iter->item, &addr);
+		uint32_list_push(list, addr);
 	}
 }
 
