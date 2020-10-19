@@ -1,7 +1,7 @@
 #include "modules/addr_graph.h"
 
-map_define(int, int, addr2node);
-map_define(int, int, node2addr);
+map_define(uint32_t, int, addr2node);
+map_define(int, uint32_t, node2addr);
 struct graph callee; // caller -> callee
 struct graph caller; // callee -> caller
 vector_struct_define(int, in);
@@ -31,7 +31,7 @@ void addr_graph_fini()
 	vector_fini(out);
 }
 
-int _addr_graph_get_nodeid(int addr)
+int _addr_graph_get_nodeid(uint32_t addr)
 {
 	int nodeid;
 	int have = map_get(addr2node, addr, &nodeid);
@@ -43,7 +43,7 @@ int _addr_graph_get_nodeid(int addr)
 	return node_cnt++;
 }
 
-int addr_graph_add_call(int caller_addr, int callee_addr)
+int addr_graph_add_call(uint32_t caller_addr, uint32_t callee_addr)
 {
 	int callee_nodeid = _addr_graph_get_nodeid(callee_addr);
 	int caller_nodeid = _addr_graph_get_nodeid(caller_addr);
@@ -94,14 +94,14 @@ int addr_graph_fixup()
 
 void addr_graph_get_dst_node(struct uint32_list *list)
 {
-	int addr;
+	uint32_t addr;
 	uint32_list_foreach(iter, dst_node) {
 		map_get(node2addr, iter->item, &addr);
 		uint32_list_push(list, addr);
 	}
 }
 
-int addr_graph_callee_first(int addr, struct addr_edge *ae)
+int addr_graph_callee_first(uint32_t addr, struct addr_edge *ae)
 {
 	int nodeid = _addr_graph_get_nodeid(addr);
 
@@ -133,7 +133,7 @@ int addr_graph_callee_next(struct addr_edge *ae)
 	return 0;
 }
 
-int addr_graph_caller_first(int addr, struct addr_edge *ae)
+int addr_graph_caller_first(uint32_t addr, struct addr_edge *ae)
 {
 	int nodeid = _addr_graph_get_nodeid(addr);
 

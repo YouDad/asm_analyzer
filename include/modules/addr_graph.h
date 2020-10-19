@@ -6,15 +6,15 @@
 
 struct addr_edge {
 	struct edge *e;
-	int addr;
+	uint32_t addr;
 };
 
 static inline int addr_edge_is_valid(struct addr_edge *ae) { return ae->e != NULL; }
-static inline int addr_edge_get_addr(struct addr_edge *ae) { return ae->addr; }
+static inline uint32_t addr_edge_get_addr(struct addr_edge *ae) { return ae->addr; }
 
 void addr_graph_init();
 void addr_graph_fini();
-int addr_graph_add_call(int caller_addr, int callee_addr);
+int addr_graph_add_call(uint32_t caller_addr, uint32_t callee_addr);
 int addr_graph_fixup();
 void addr_graph_get_dst_node(struct uint32_list *list);
 
@@ -34,7 +34,7 @@ void addr_graph_get_dst_node(struct uint32_list *list);
 			_ret == 0 && addr_edge_is_valid(&i);                                         \
 			_ret = addr_graph_callee_next(&i), callee_addr = addr_edge_get_addr(&i))
 
-int addr_graph_callee_first(int addr, struct addr_edge *ae);
+int addr_graph_callee_first(uint32_t addr, struct addr_edge *ae);
 int addr_graph_callee_next(struct addr_edge *ae);
 
 /* 遍历调用addr的函数
@@ -53,5 +53,5 @@ int addr_graph_callee_next(struct addr_edge *ae);
 			_ret == 0 && addr_edge_is_valid(&i);                                         \
 			_ret = addr_graph_caller_next(&i), caller_addr = addr_edge_get_addr(&i))
 
-int addr_graph_caller_first(int addr, struct addr_edge *ae);
+int addr_graph_caller_first(uint32_t addr, struct addr_edge *ae);
 int addr_graph_caller_next(struct addr_edge *ae);
