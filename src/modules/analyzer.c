@@ -1,8 +1,8 @@
 #include "modules/analyzer.h"
 #include "modules/addr_graph.h"
 
-int get_called_func_by_address(uint32_t address,
-		struct uint32_list *called_address_list)
+int get_callee_by_address(uint32_t address,
+		struct uint32_list *callee_addr_list)
 {
 	LIST_HEAD(iblist);
 
@@ -23,7 +23,7 @@ int get_called_func_by_address(uint32_t address,
 				if (ret != 1) {
 					return -EINTERNAL;
 				}
-				uint32_list_push(called_address_list, new_address);
+				uint32_list_push(callee_addr_list, new_address);
 			}
 			if (i->address < item->end_address) {
 				i++;
@@ -44,7 +44,7 @@ int init_call_graph(struct uint32_list *addr_queue)
 		uint32_t caller_addr = uint32_list_pop(addr_queue);
 		uint32_list_define(aq);
 
-		int ret = get_called_func_by_address(caller_addr, &aq);
+		int ret = get_callee_by_address(caller_addr, &aq);
 		if (ret) {
 			return ret;
 		}
