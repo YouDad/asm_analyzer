@@ -1,4 +1,5 @@
 #include "modules/analyzer.h"
+#include "modules/addr_graph.h"
 
 int get_called_func_by_address(uint32_t address,
 		struct list_head *called_address_list)
@@ -33,4 +34,32 @@ int get_called_func_by_address(uint32_t address,
 	}
 
 	return 0;
+}
+
+int init_call_graph(struct list_head *addr_queue)
+{
+	addr_graph_init();
+
+	while (!list_empty(addr_queue)) {
+		uint32_t caller_addr = uint32_list_pop_head(addr_queue);
+		LIST_HEAD(aq);
+		int ret = get_called_func_by_address(caller_addr, &aq);
+		if (ret) {
+			return ret;
+		}
+
+		while (!list_empty(&aq)) {
+			uint32_t callee_addr = uint32_list_pop_head(&aq);
+			addr_graph_add_call(caller_addr, callee_addr);
+			uint32_list_insert_tail(addr_queue, callee_addr);
+		}
+	}
+
+	addr_graph_fixup();
+	return 0;
+}
+
+void fini_call_graph()
+{
+	addr_graph_fini();
 }
