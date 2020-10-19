@@ -12,9 +12,7 @@ int get_callee_by_addr(uint32_t addr, struct uint32_list *callee_addr_list)
 
 	struct instruction_block *item, *tmp;
 	list_for_each_entry_safe(item, tmp, &iblist, list) {
-		struct instruction *i = item->ip;
-
-		while (1) {
+		for (struct instruction *i = item->ip; 1; i++) {
 			if (strstr(i->string, "bl\t") == i->string) {
 				// bl <addr>
 				uint32_t new_addr;
@@ -24,9 +22,8 @@ int get_callee_by_addr(uint32_t addr, struct uint32_list *callee_addr_list)
 				}
 				uint32_list_push(callee_addr_list, new_addr);
 			}
-			if (i->addr < item->end_addr) {
-				i++;
-			} else {
+
+			if (i->addr >= item->end_addr) {
 				break;
 			}
 		}
