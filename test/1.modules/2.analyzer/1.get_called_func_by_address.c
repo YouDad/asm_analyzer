@@ -42,7 +42,7 @@ int main()
 
 int test(int addr, int *a, int alen)
 {
-	LIST_HEAD(called_addresses);
+	uint32_list_define(called_addresses);
 
 	int ret = get_called_func_by_address(addr, &called_addresses);
 	if (ret) {
@@ -51,13 +51,13 @@ int test(int addr, int *a, int alen)
 	}
 
 	int i = 0;
-	while (!list_empty(&called_addresses)) {
+	while (!uint32_list_empty(&called_addresses)) {
 		if (i >= alen) {
 			printf("alen assert failed(%d)\n", alen);
 			return 2;
 		}
 
-		int addr = uint32_list_pop_head(&called_addresses);
+		uint32_t addr = uint32_list_pop(&called_addresses);
 		if (a[i] != addr) {
 			printf("address assert failed(%x, %x)\n", a[i], addr);
 			return 3;

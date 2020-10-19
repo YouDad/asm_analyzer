@@ -2,7 +2,7 @@
 #include "modules/addr_graph.h"
 
 int get_called_func_by_address(uint32_t address,
-		struct list_head *called_address_list)
+		struct uint32_list *called_address_list)
 {
 	LIST_HEAD(iblist);
 
@@ -23,7 +23,7 @@ int get_called_func_by_address(uint32_t address,
 				if (ret != 1) {
 					return -EINTERNAL;
 				}
-				uint32_list_insert_tail(called_address_list, new_address);
+				uint32_list_push(called_address_list, new_address);
 			}
 			if (i->address < item->end_address) {
 				i++;
@@ -36,22 +36,23 @@ int get_called_func_by_address(uint32_t address,
 	return 0;
 }
 
-int init_call_graph(struct list_head *addr_queue)
+int init_call_graph(struct uint32_list *addr_queue)
 {
 	addr_graph_init();
 
-	while (!list_empty(addr_queue)) {
-		uint32_t caller_addr = uint32_list_pop_head(addr_queue);
-		LIST_HEAD(aq);
+	while (!uint32_list_empty(addr_queue)) {
+		uint32_t caller_addr = uint32_list_pop(addr_queue);
+		uint32_list_define(aq);
+
 		int ret = get_called_func_by_address(caller_addr, &aq);
 		if (ret) {
 			return ret;
 		}
 
-		while (!list_empty(&aq)) {
-			uint32_t callee_addr = uint32_list_pop_head(&aq);
+		while (!uint32_list_empty(&aq)) {
+			uint32_t callee_addr = uint32_list_pop(&aq);
 			addr_graph_add_call(caller_addr, callee_addr);
-			uint32_list_insert_tail(addr_queue, callee_addr);
+			uint32_list_push(addr_queue, callee_addr);
 		}
 	}
 

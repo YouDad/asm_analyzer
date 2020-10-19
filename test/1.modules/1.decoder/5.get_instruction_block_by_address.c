@@ -3,7 +3,7 @@
 
 int test(int sa, int ea, int *ja, int jlen)
 {
-	LIST_HEAD(address_queue);
+	uint32_list_define(address_queue);
 	struct instruction_block ib;
 
 	int ret = get_instruction_block_by_address(sa, &address_queue, &ib);
@@ -21,19 +21,17 @@ int test(int sa, int ea, int *ja, int jlen)
 		return 3;
 	}
 
-
-	struct uint32_list_item *item, *tmp;
 	int i = 0;
-	list_for_each_entry_safe(item, tmp, &address_queue, list) {
+	while (!uint32_list_empty(&address_queue)) {
 		if (i >= jlen) {
 			printf("jump_address length assert failed(%d)\n", jlen);
 			return 4;
 		}
-		if (item->item != ja[i]) {
-			printf("jump_address assert failed(%x, %x)\n", ja[i], item->item);
+		int addr = uint32_list_pop(&address_queue);
+		if (addr != ja[i]) {
+			printf("jump_address assert failed(%x, %x)\n", ja[i], addr);
 			return 5;
 		}
-		uint32_list_pop_head(&address_queue);
 		i++;
 	}
 

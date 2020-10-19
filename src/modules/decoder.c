@@ -110,7 +110,7 @@ struct instruction get_instruction_by_line(uint32_t line)
  * retval = 0: success
  * retval > 0: no error, but failed */
 int get_instruction_block_by_address(uint32_t start_address,
-		struct list_head *address_queue,
+		struct uint32_list *address_queue,
 		struct instruction_block *retval)
 {
 	if (start_address % 4) {
@@ -139,7 +139,7 @@ int get_instruction_block_by_address(uint32_t start_address,
 				return -EINTERNAL;
 			}
 
-			uint32_list_insert_tail(address_queue, new_address);
+			uint32_list_push(address_queue, new_address);
 			continue;
 		}
 
@@ -155,7 +155,7 @@ int get_instruction_block_by_address(uint32_t start_address,
 				return -EINTERNAL;
 			}
 
-			uint32_list_insert_tail(address_queue, new_address);
+			uint32_list_push(address_queue, new_address);
 			continue;
 		}
 
@@ -179,7 +179,7 @@ int get_instruction_block_by_address(uint32_t start_address,
 					printf("get new_address failed: %x %s", i.address, i.string);
 					return -EINTERNAL;
 				}
-				uint32_list_insert_tail(address_queue, new_address);
+				uint32_list_push(address_queue, new_address);
 
 				if (i.string[1] == '\t') {
 					break;
@@ -212,14 +212,14 @@ int get_function_by_address(uint32_t start_address,
 	}
 
 	int ret = 0;
-	LIST_HEAD(queue);
+	uint32_list_define(queue);
 	LIST_HEAD(tmp_i10s_list);
-	uint32_list_insert_tail(&queue, start_address);
+	uint32_list_push(&queue, start_address);
 	bitmap_clear(&visited);
 
-	while (!list_empty(&queue)) {
+	while (!uint32_list_empty(&queue)) {
 		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
-		int addr = uint32_list_pop_head(&queue);
+		int addr = uint32_list_pop(&queue);
 
 		ret = get_instruction_block_by_address(addr, &queue, i10s);
 		if (ret < 0) {
