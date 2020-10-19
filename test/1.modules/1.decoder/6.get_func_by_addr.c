@@ -6,7 +6,7 @@ int test(int addr, int *sa, int *ea, int len)
 	LIST_HEAD(i10s_list);
 	struct instruction_block *item, *tmp;
 
-	int ret = get_func_by_addr(addr, &i10s_list);
+	int ret = get_func_by_addr(addr, 1, &i10s_list);
 	if (ret) {
 		printf("get_func_by_addr failed(%d)\n", ret);
 		return 1;

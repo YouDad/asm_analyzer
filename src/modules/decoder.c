@@ -212,7 +212,7 @@ int get_instruction_block_by_addr(uint32_t start_addr,
 	return 0;
 }
 
-int get_func_by_addr(uint32_t start_addr,
+int get_func_by_addr(uint32_t start_addr, int clear,
 		struct list_head *instruction_block_list)
 {
 	if (start_addr % 4) {
@@ -223,6 +223,9 @@ int get_func_by_addr(uint32_t start_addr,
 	uint32_list_define(queue);
 	LIST_HEAD(tmp_i10s_list);
 	uint32_list_push(&queue, start_addr);
+	if (clear) {
+		bitmap_clear(&visited);
+	}
 
 	while (!uint32_list_empty(&queue)) {
 		struct instruction_block *i10s = MALLOC(struct instruction_block, 1);
