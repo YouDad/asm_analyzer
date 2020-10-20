@@ -10,8 +10,9 @@ int test(int addr, int assert_callee_addr_sum, int assert_caller_addr_sum)
 	addr_graph_callee_for_each(i, _ret, addr, callee_addr) {
 		sum += callee_addr;
 	}
-	if (_ret) {
+	if (_ret && _ret != -ENOADDR) {
 		printf("callee_for_each failed(%d)\n", _ret);
+		printf("%x\n", addr);
 		return 1;
 	}
 	if (sum != assert_callee_addr_sum) {
@@ -23,8 +24,9 @@ int test(int addr, int assert_callee_addr_sum, int assert_caller_addr_sum)
 	addr_graph_caller_for_each(i, _ret, addr, caller_addr) {
 		sum += caller_addr;
 	}
-	if (_ret) {
+	if (_ret && _ret != -ENOADDR) {
 		printf("caller_for_each failed(%d)\n", _ret);
+		printf("%x\n", addr);
 		return 3;
 	}
 	if (sum != assert_caller_addr_sum) {
