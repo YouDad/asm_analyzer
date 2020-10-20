@@ -11,6 +11,11 @@ void print_instruction(struct instruction *i, char *pre)
 			pre, i->addr, i->code, i->string);
 }
 
+void print_instruction_short(struct instruction *i, char *pre)
+{
+	printf("%s%04x\t\t%s\n", pre, i->addr, i->string);
+}
+
 void print_instruction_block(struct instruction_block *ib)
 {
 	int ib_size = 4;
@@ -22,6 +27,22 @@ void print_instruction_block(struct instruction_block *ib)
 
 	for (int i = 0; i < ib_size; i++) {
 		print_instruction(&ib->ip[i], "  ");
+	}
+
+	printf("}\n");
+}
+
+void print_instruction_block_short(struct instruction_block *ib)
+{
+	int ib_size = 4;
+	ib_size += ib->end_addr - ib->start_addr;
+	ib_size /= 4;
+
+	printf("instruction_block[%d] {\n  start_addr: %x, end_addr: %x\n",
+			ib_size, ib->start_addr, ib->end_addr);
+
+	for (int i = 0; i < ib_size; i++) {
+		print_instruction_short(&ib->ip[i], "  ");
 	}
 
 	printf("}\n");

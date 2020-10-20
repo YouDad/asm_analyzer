@@ -9,6 +9,7 @@ struct instruction {
 };
 
 void print_instruction(struct instruction *i, char *pre);
+void print_instruction_short(struct instruction *i, char *pre);
 
 struct instruction_block {
 	struct list_head list;
@@ -18,6 +19,7 @@ struct instruction_block {
 };
 
 void print_instruction_block(struct instruction_block *ib);
+void print_instruction_block_short(struct instruction_block *ib);
 void release_instruction_block(struct instruction_block *ib);
 int can_merge_instruction_block(struct instruction_block *prev, struct instruction_block *next);
 void merge_instruction_block(struct instruction_block *prev, struct instruction_block *next);
