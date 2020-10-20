@@ -65,6 +65,9 @@ static inline void graph_fini(struct graph *g)
 
 static inline struct edge *graph_first(struct graph *g, int u)
 {
+	if (u >= vector_size(g->head)) {
+		return NULL;
+	}
 	if (g->head[u] == -1) {
 		return NULL;
 	}

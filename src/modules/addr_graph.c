@@ -107,7 +107,7 @@ int addr_graph_callee_first(uint32_t addr, struct addr_edge *ae)
 
 	ae->e = graph_first(&callee, nodeid);
 	if (!ae->e) {
-		return 0;
+		return -ENOADDR;
 	}
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
@@ -139,7 +139,7 @@ int addr_graph_caller_first(uint32_t addr, struct addr_edge *ae)
 
 	ae->e = graph_first(&caller, nodeid);
 	if (!ae->e) {
-		return 0;
+		return -ENOADDR;
 	}
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
