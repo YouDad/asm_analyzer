@@ -1,4 +1,5 @@
 #pragma once
+#include "common.h"
 #include <string.h>
 #include <errno.h>
 #include <malloc.h>
@@ -19,7 +20,7 @@ struct bitmap {
 static inline int bitmap_init(unsigned int size, struct bitmap *bm)
 {
 	bm->len = (size + bes - 1) / bes * sizeof(bitmap_t);
-	bm->ptr = (bitmap_t *)malloc(bm->len);
+	bm->ptr = MALLOC(bitmap_t, bm->len);
 	if (!bm->ptr) {
 		return -ENOMEM;
 	}

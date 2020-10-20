@@ -26,8 +26,7 @@ static inline int uint32_list_empty(struct uint32_list *list)
 static inline void uint32_list_push(struct uint32_list *list, uint32_t x)
 {
 	struct uint32_list_item *new_addr;
-	new_addr = (struct uint32_list_item *)
-		malloc(sizeof(struct uint32_list_item));
+	new_addr = MALLOC(struct uint32_list_item, 1);
 	INIT_LIST_HEAD(&new_addr->list);
 	new_addr->item = x;
 	list_insert_head(&new_addr->list, list->head.prev);
