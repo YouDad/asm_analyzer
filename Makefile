@@ -19,7 +19,6 @@ test: src
 	rm -rf $(OUTDIR)
 	mkdir -p $(OUTDIR)
 	make install -C test/
-	./test.sh
 	make clean
 
 .PHONY: clean
