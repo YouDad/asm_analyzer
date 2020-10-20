@@ -7,3 +7,4 @@
 #include "types/instruction.h"
 #include "types/map.h"
 #include "types/graph.h"
+#include "types/bool.h"
