@@ -1,3 +1,4 @@
+#pragma once
 #include "modules/decoder.h"
 
 int get_callee_by_addr(uint32_t addr, struct uint32_list *callee_addr_list);

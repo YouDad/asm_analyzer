@@ -1,3 +1,4 @@
+#pragma once
 struct route {
 	char id[16];
 	char small_id[3];
