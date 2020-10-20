@@ -10,5 +10,5 @@
 #define MALLOC(type, number) (type *)malloc((number) * sizeof(type))
 #define REALLOC(ptr, type, number) (type *)realloc((ptr), (number) * sizeof(type))
 
-#define EINTERNAL 0x1000 + 0
-#define ENOADDR   0x1000 + 1
+#define EINTERNAL (0x1000 + 0)
+#define ENOADDR   (0x1000 + 1)
