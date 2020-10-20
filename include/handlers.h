@@ -8,5 +8,3 @@ struct route {
 };
 
 int dispatch(char cmd[128]);
-int handle_help(char *args);
-int handle_load(char *args);

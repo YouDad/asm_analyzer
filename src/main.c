@@ -1,23 +1,29 @@
 #include "common.h"
 #include "handlers.h"
 
-int main()
+int main(int argc, char **argv)
 {
-	char cmd[128];
+	char cmd[128] = "load ";
+	if (argc == 2) {
+		strcpy(&cmd[5], argv[1]);
+	}
 
-	printf("<luwh0708@thundersoft.com>\n$ ");
+	printf("<luwh0708@thundersoft.com>\n");
+	if (argc == 2) {
+		dispatch(cmd);
+	}
 	while (1) {
+		printf("\n$ ");
 		if (fgets(cmd, sizeof(cmd), stdin) == 0) {
 			// catch EOF(Ctrl+D)
+			dispatch("exit");
 			break;
 		}
 
 		int ret = dispatch(cmd);
 		if (ret) {
-			return ret;
+			printf("failed return %d\n", ret);
 		}
-
-		printf("\n$ ");
 	}
 
 	return 0;
