@@ -1,0 +1,7 @@
+#define _red(str)    "\033[31m" str "\033[0m"
+#define _green(str)  "\033[32m" str "\033[0m"
+#define _yellow(str) "\033[33m" str "\033[0m"
+#define _blue(str)   "\033[34m" str "\033[0m"
+#define _purple(str) "\033[35m" str "\033[0m"
+#define _cyan(str)   "\033[36m" str "\033[0m"
+#define _gray(str)   "\033[37m" str "\033[0m"
