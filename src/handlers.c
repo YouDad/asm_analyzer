@@ -1,5 +1,6 @@
 #include "common.h"
 #include "modules/analyzer.h"
+#include "modules/translater.h"
 #include "handlers.h"
 
 int handle_help(char *args);
@@ -13,6 +14,7 @@ int handle_get_callee(char *args);
 int handle_get_caller(char *args);
 int handle_get_leaves(char *args);
 int handle_func_args(char *args);
+int handle_translate(char *args);
 
 struct route routes[] = {
 	{"help", "h", handle_help, "outputs help information"},
@@ -25,6 +27,7 @@ struct route routes[] = {
 	{"get_caller", "gr", handle_get_caller, "get caller of function of addr"},
 	{"get_leaves", "gv", handle_get_leaves, "get leaf function"},
 	{"arg", "a", handle_func_args, "analysis function's arguments"},
+	{"translate", "t", handle_translate, "translate asm code"},
 };
 
 int dispatch(char cmd[128])
@@ -239,6 +242,33 @@ int handle_func_args(char *args)
 			printf("x%d\n", i);
 		}
 	}
+
+	return 0;
+}
+
+char translate_str[1<<16];
+
+int handle_translate(char *args)
+{
+	handle_init_analyzer(args);
+	uint32_t addr;
+	sscanf(args, "%x", &addr);
+
+	LIST_HEAD(iblist);
+	int ret = get_func_by_addr(addr, 1, &iblist);
+	if (ret) {
+		printf("get_func_by_addr failed(%d)\n", ret);
+		return 1;
+	}
+
+	int len = 0;
+	struct instruction_block *ib, *tmp;
+	list_for_each_entry_safe(ib, tmp, &iblist, list) {
+		len += ib->end_addr - ib->start_addr + 4;
+	}
+	len *= 10;
+	translate(&iblist, translate_str, len);
+	printf("%s", translate_str);
 
 	return 0;
 }
