@@ -123,83 +123,33 @@ int _get_ib_by_addr(uint32_t addr, bool until_jump, struct uint32_list *aq, stru
 
 	while (!bitmap_get(&visited, line)) {
 		struct instruction i = get_instruction_by_line(line);
-		int is_jump_instr;
 		vector_push(instrs, i);
 		bitmap_set(&visited, line++);
 
-		is_jump_instr = strstr(i.string, "cbnz") == i.string;
-		is_jump_instr += strstr(i.string, "cbz") == i.string;
-
-		if (is_jump_instr) {
-			// cbnz, cbz
-			uint32_t new_addr;
-			int ret = sscanf(i.string, "%*s%*s%x", &new_addr);
-			if (ret != 1) {
-				printf("get new_addr failed: %x %s", i.addr, i.string);
-				return -EINTERNAL;
-			}
-
-			uint32_list_push(aq, new_addr);
-			if (until_jump) {
-				uint32_list_push(aq, i.addr + 4);
-				break;
-			} else {
-				continue;
-			}
-		}
-
-		is_jump_instr = strstr(i.string, "tbnz") == i.string;
-		is_jump_instr += strstr(i.string, "tbz") == i.string;
-
-		if (is_jump_instr) {
-			// tbnz, tbz
-			uint32_t new_addr;
-			int ret = sscanf(i.string, "%*s%*s%*s%x", &new_addr);
-			if (ret != 1) {
-				printf("get new_addr failed: %x %s", i.addr, i.string);
-				return -EINTERNAL;
-			}
-
-			uint32_list_push(aq, new_addr);
-			if (until_jump) {
-				uint32_list_push(aq, i.addr + 4);
-				break;
-			} else {
-				continue;
-			}
-		}
-
-		is_jump_instr = strstr(i.string, "ret") == i.string;
+		int is_jump_instr = strstr(i.string, "ret") == i.string;
 		is_jump_instr += strstr(i.string, "eret") == i.string;
+		is_jump_instr += strstr(i.string, "br") == i.string;
 		if (is_jump_instr) {
 			break;
 		}
 
-		if (i.string[0] == 'b') {
-			// br
-			if (i.string[1] == 'r') {
+		uint32_t new_addr;
+		int ret = get_jump_addr_by_str(i.string, &new_addr);
+		if (ret < 0) {
+			return ret;
+		}
+		if (ret == 0) {
+			uint32_list_push(aq, new_addr);
+
+			if (strstr(i.string, "b\t") == i.string) {
 				break;
 			}
 
-			// b, b.cond
-			if (i.string[1] == '\t' || i.string[1] == '.') {
-				uint32_t new_addr;
-				int ret = sscanf(i.string, "%*s%x", &new_addr);
-				if (ret != 1) {
-					printf("get new_addr failed: %x %s", i.addr, i.string);
-					return -EINTERNAL;
-				}
-				uint32_list_push(aq, new_addr);
-
-				if (i.string[1] == '\t') {
-					break;
-				} else if (until_jump) {
-					uint32_list_push(aq, i.addr + 4);
-					break;
-				} else {
-					continue;
-				}
-
+			if (until_jump) {
+				uint32_list_push(aq, i.addr + 4);
+				break;
+			} else {
+				continue;
 			}
 		}
 	}

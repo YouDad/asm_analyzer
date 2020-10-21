@@ -385,3 +385,27 @@ int regs_affected_by_inst(struct instruction *i, struct uint32_list *r, struct u
 
 	return !processed;
 }
+
+int get_jump_addr_by_str(char *str, uint32_t *addr)
+{
+	if (str[0] == 'b') {
+		if (str[1] == '\t' || str[1] == '.') {
+			int ret = sscanf(str, "%*s%x", addr);
+			if (ret != 1) return -EINTERNAL;
+			return 0;
+		}
+	} else if (str[0] == 'c') {
+		if (strstr(str, "cbz") == str || strstr(str, "cbnz") == str) {
+			int ret = sscanf(str, "%*s%*s%x", addr);
+			if (ret != 1) return -EINTERNAL;
+			return 0;
+		}
+	} else if (str[0] == 't') {
+		if (strstr(str, "tbz") == str || strstr(str, "tbnz") == str) {
+			int ret = sscanf(str, "%*s%*s%*s%x", addr);
+			if (ret != 1) return -EINTERNAL;
+			return 0;
+		}
+	}
+	return 1;
+}

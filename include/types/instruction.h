@@ -25,3 +25,4 @@ int can_merge_instruction_block(struct instruction_block *prev, struct instructi
 void merge_instruction_block(struct instruction_block *prev, struct instruction_block *next);
 
 int regs_affected_by_inst(struct instruction *i, struct uint32_list *r, struct uint32_list *w);
+int get_jump_addr_by_str(char *str, uint32_t *addr);
