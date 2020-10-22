@@ -22,7 +22,7 @@ static inline int bitmap_init(unsigned int size, struct bitmap *bm)
 	bm->len = (size + bes - 1) / bes * sizeof(bitmap_t);
 	bm->ptr = MALLOC(bitmap_t, bm->len);
 	if (!bm->ptr) {
-		return -ENOMEM;
+		error(-ENOMEM, "malloc failed");
 	}
 	memset(bm->ptr, 0, bm->len);
 	return 0;

@@ -53,7 +53,7 @@
 		}                                                               \
 		void *new_ptr = REALLOC(vector, typeof(*vector), vector##_cnt); \
 		if (!new_ptr) {                                                 \
-			return -ENOMEM;                                             \
+			error(-ENOMEM, "realloc failed");                           \
 		}                                                               \
 		vector = new_ptr;                                               \
 	} while (0)
@@ -67,7 +67,7 @@
 		vector##_max *= 2;                                              \
 		void *new_ptr = REALLOC(vector, typeof(*vector), vector##_max); \
 		if (!new_ptr) {                                                 \
-			return -ENOMEM;                                             \
+			error(-ENOMEM, "realloc failed");                           \
 		}                                                               \
 		vector = new_ptr;                                               \
 	}                                                                   \
@@ -82,11 +82,11 @@
 			id##_max = _cnt * 2;                                \
 			void *new_ptr = REALLOC(id, typeof(*id), id##_max); \
 			if (!new_ptr) {                                     \
-				return -ENOMEM;                                 \
+				error(-ENOMEM, "realloc failed");               \
 			}                                                   \
 			id = new_ptr;                                       \
 		}                                                       \
-		while (id##_cnt <= _cnt) {                                \
+		while (id##_cnt <= _cnt) {                              \
 			id[id##_cnt++] = _val;                              \
 		}                                                       \
 	}                                                           \

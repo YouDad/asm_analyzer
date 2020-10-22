@@ -5,6 +5,7 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdint.h>
+#include "utils/log.h"
 
 #define array_size(x) (sizeof(x) / sizeof(typeof(x[0])))
 #define MALLOC(type, number) (type *)malloc((number) * sizeof(type))

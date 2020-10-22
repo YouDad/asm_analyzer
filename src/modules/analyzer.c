@@ -18,7 +18,7 @@ int get_callee_by_addr(uint32_t addr, struct uint32_list *callee_addr_list)
 				uint32_t new_addr;
 				int ret = sscanf(i->string, "%*s%x", &new_addr);
 				if (ret != 1) {
-					return -EINTERNAL;
+					error(-EINTERNAL, "bl addr read failed");
 				}
 				uint32_list_push(callee_addr_list, new_addr);
 			}

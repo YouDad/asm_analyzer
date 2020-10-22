@@ -245,7 +245,7 @@ int handle_func_args(char *args)
 	return 0;
 }
 
-char translate_str[1<<16];
+char translate_str[1 << 16];
 
 int handle_translate(char *args)
 {
@@ -260,13 +260,7 @@ int handle_translate(char *args)
 		return 1;
 	}
 
-	int len = 0;
-	struct instruction_block *ib, *tmp;
-	list_for_each_entry_safe(ib, tmp, &iblist, list) {
-		len += ib->end_addr - ib->start_addr + 4;
-	}
-	len *= 10;
-	translate(&iblist, translate_str, len);
+	translate(&iblist, translate_str, 1 << 16);
 	printf("%s", translate_str);
 
 	return 0;

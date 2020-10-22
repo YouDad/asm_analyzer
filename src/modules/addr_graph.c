@@ -107,12 +107,12 @@ int addr_graph_callee_first(uint32_t addr, struct addr_edge *ae)
 
 	ae->e = graph_first(&callee, nodeid);
 	if (!ae->e) {
-		return -ENOADDR;
+		error(-ENOADDR, "%s no such addr", __func__);
 	}
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
 	if (!ret) {
-		return -EINTERNAL;
+		error(-EINTERNAL, "node2addr have no nodeid = %d", ae->e->dest);
 	}
 
 	return 0;
@@ -127,7 +127,7 @@ int addr_graph_callee_next(struct addr_edge *ae)
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
 	if (!ret) {
-		return -EINTERNAL;
+		error(-EINTERNAL, "node2addr have no nodeid = %d", ae->e->dest);
 	}
 
 	return 0;
@@ -139,12 +139,12 @@ int addr_graph_caller_first(uint32_t addr, struct addr_edge *ae)
 
 	ae->e = graph_first(&caller, nodeid);
 	if (!ae->e) {
-		return -ENOADDR;
+		error(-ENOADDR, "%s no such addr", __func__);
 	}
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
 	if (!ret) {
-		return -EINTERNAL;
+		error(-EINTERNAL, "node2addr have no nodeid = %d", ae->e->dest);
 	}
 
 	return 0;
@@ -159,7 +159,7 @@ int addr_graph_caller_next(struct addr_edge *ae)
 
 	int ret = map_get(node2addr, ae->e->dest, &ae->addr);
 	if (!ret) {
-		return -EINTERNAL;
+		error(-EINTERNAL, "node2addr have no nodeid = %d", ae->e->dest);
 	}
 
 	return 0;

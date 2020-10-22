@@ -8,7 +8,7 @@ int decoder_load(char *filename)
 {
 	FILE *fp = fopen(filename, "r");
 	if (!fp) {
-		return -ENOENT;
+		error(-ENOENT, "open failed");
 	}
 
 	fseek(fp, 0, SEEK_END);
@@ -86,7 +86,7 @@ int get_line_by_addr(uint32_t addr)
 			l = mid + 1;
 		}
 	}
-	return -1;
+	error(-1, "%s failed", __func__);
 }
 
 struct instruction get_instruction_by_line(uint32_t line)
@@ -110,7 +110,7 @@ struct instruction get_instruction_by_line(uint32_t line)
 int _get_ib_by_addr(uint32_t addr, bool until_jump, struct uint32_list *aq, struct instruction_block *rv)
 {
 	if (addr % 4) {
-		return -EINVAL;
+		error(-EINVAL, "%s addr align failed", __func__);
 	}
 
 	vector_define(struct instruction, instrs);
@@ -118,7 +118,7 @@ int _get_ib_by_addr(uint32_t addr, bool until_jump, struct uint32_list *aq, stru
 
 	int line = get_line_by_addr(addr);
 	if (line < 0) {
-		return -ENOADDR;
+		error(-ENOADDR, "%s no such addr", __func__);
 	}
 
 	while (!bitmap_get(&visited, line)) {
@@ -211,7 +211,7 @@ int get_func_by_addr(uint32_t start_addr, int clear,
 		struct list_head *instruction_block_list)
 {
 	if (start_addr % 4) {
-		return -EINVAL;
+		error(-EINVAL, "%s addr align failed", __func__);
 	}
 
 	int ret = 0;
