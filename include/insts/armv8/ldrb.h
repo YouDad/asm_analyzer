@@ -5,7 +5,7 @@
 
 static inline int _translate_ldrb(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	char rt[8], rn[8], other[16];
+	char rt[8], rn[8], other[20];
 	int ret, imm;
 	bool wback, postindex;
 

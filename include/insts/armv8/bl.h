@@ -4,7 +4,7 @@
 
 static inline int _translate_bl(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	char addr[16];
+	char addr[20];
 	int ret = sscanf(inst->string, "%*s\t" "%s", addr);
 	if (ret != 1) {
 		return 1;

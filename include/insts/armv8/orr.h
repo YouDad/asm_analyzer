@@ -9,7 +9,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 
 	int ret;
 	if (strstr(inst->string, ", #") != NULL) {
-		char rd[8], rn[8], imm[8];
+		char rd[8], rn[8], imm[20];
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], %[^,], #%[^,]", rd, rn, imm);
 		if (ret == 3) {
@@ -19,7 +19,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 			return 1;
 		}
 	} else {
-		char rd[8], rn[8], rm[8], other[16];
+		char rd[8], rn[8], rm[8], other[20];
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], %[^,], %[^,]%[^.]",
 				rd, rn, rm, other);

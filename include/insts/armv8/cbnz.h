@@ -4,7 +4,7 @@
 
 static inline int _translate_cbnz(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	char rt[4], addr[16];
+	char rt[8], addr[20];
 	int ret = sscanf(inst->string, "%*s\t" "%[^,], %s", rt, addr);
 	if (ret != 2) {
 		return 1;

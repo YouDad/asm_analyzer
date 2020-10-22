@@ -7,7 +7,7 @@ static inline int _translate_sub(const struct instruction *inst, char *str, int 
 	// rd, rn, rm{, extend {#amount}}
 	// rd, rn, imm{, shift}
 	// rd, rn, rm{, shift}
-	char rd[8], rn[8], rmimm[8], other[16];
+	char rd[8], rn[8], rmimm[20], other[20];
 	int ret = sscanf(inst->string, "%*s\t"
 			"%[^,], %[^,], %[^,]%[^.]",
 			rd, rn, rmimm, other);

@@ -4,7 +4,7 @@
 
 static inline int _translate_b_cond(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	char op[4], addr[16];
+	char op[8], addr[20];
 	int ret = sscanf(inst->string, "b.%s\t" "%s", op, addr);
 	if (ret != 2) {
 		return 1;

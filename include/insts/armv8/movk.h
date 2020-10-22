@@ -5,7 +5,7 @@
 static inline int _translate_movk(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	// rd, #imm{, lsl #shift}
-	char xd[8], xn[8], other[16];
+	char xd[8], xn[20], other[20];
 	int ret = sscanf(inst->string, "%*s\t%[^,], #%[0-9xa-f]%[^.]", xd, xn, other);
 	if (ret == 2) {
 		addr_printf("%s = %s;", xd, xn[0] == '#' ? &xn[1] : xn);
