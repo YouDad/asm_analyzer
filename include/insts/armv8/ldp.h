@@ -3,6 +3,9 @@
 #include "utils/insts.h"
 #include "types/bool.h"
 
+static const char *_test_inst_ldp[] = {};
+static const char *_test_result_ldp[] = {};
+
 static inline int _translate_ldp(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	char rt1[8], rt2[8], rn[8], other[20];

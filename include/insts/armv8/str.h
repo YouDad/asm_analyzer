@@ -3,6 +3,13 @@
 #include "utils/insts.h"
 #include "types/bool.h"
 
+static const char *_test_inst_str[] = {
+	"str\tx0, [sp, #16]", 0,
+};
+static const char *_test_result_str[] = {
+	"(uint64_t *)sp[2] = x0;", 0,
+};
+
 static inline int _translate_str(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	char rt[8], rn[8], other[20];

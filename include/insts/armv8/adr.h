@@ -2,6 +2,9 @@
 #include "types/instruction.h"
 #include "utils/insts.h"
 
+static const char *_test_inst_adr[] = {};
+static const char *_test_result_adr[] = {};
+
 static inline int _translate_adr(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	// xd, xn/imm

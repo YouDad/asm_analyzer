@@ -2,6 +2,9 @@
 #include "types/instruction.h"
 #include "utils/insts.h"
 
+static const char *_test_inst_movk[] = {};
+static const char *_test_result_movk[] = {};
+
 static inline int _translate_movk(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	// rd, #imm{, lsl #shift}

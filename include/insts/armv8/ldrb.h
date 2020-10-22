@@ -3,6 +3,13 @@
 #include "utils/insts.h"
 #include "types/bool.h"
 
+static const char *_test_inst_ldrb[] = {
+	"ldrb\tw0, [x0]", 0,
+};
+static const char *_test_result_ldrb[] = {
+	"w0 = (uint8_t *)x0[0];", 0,
+};
+
 static inline int _translate_ldrb(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	char rt[8], rn[8], other[20];

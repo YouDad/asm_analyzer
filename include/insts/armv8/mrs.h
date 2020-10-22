@@ -2,6 +2,9 @@
 #include "types/instruction.h"
 #include "utils/insts.h"
 
+static const char *_test_inst_mrs[] = {};
+static const char *_test_result_mrs[] = {};
+
 static inline int _translate_mrs(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	// xd, xn/imm

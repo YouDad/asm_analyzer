@@ -2,6 +2,19 @@
 #include "types/instruction.h"
 #include "utils/insts.h"
 
+static const char *_test_inst_sub[] = {
+	"sub\tx0, x1, x2", 0,
+	"sub\tx0, x1, x2, uxtw #1", 0,
+	"sub\tx0, x1, x2, sxtx", 0,
+	"sub\tx9, x30, sp, lsl #32", 0,
+};
+static const char *_test_result_sub[] = {
+	"x0 = x1 - x2;", 0,
+	"x0 = x1 - (uint32_t)(x2 << 1);", 0,
+	"x0 = x1 - (int64_t)x2;", 0,
+	"x9 = x30 - (uint64_t)(sp << 32);", 0,
+};
+
 static inline int _translate_sub(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	// rd, rn, rm{, extend {#amount}}
