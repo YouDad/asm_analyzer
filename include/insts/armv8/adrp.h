@@ -7,7 +7,6 @@ static inline int _translate_adrp(const struct instruction *inst, char *str, int
 	// xd, xn/imm
 	char xd[8], xn[8];
 	sscanf(inst->string, "%*s\t%[^,], %s", xd, xn);
-	addr_printf("%s = %s;",
-			xd, xn[0] == '#' ? &xn[1] : xn);
+	addr_printf("%s = 0x%s;", xd, xn);
 	return 0;
 }
