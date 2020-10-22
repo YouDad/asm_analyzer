@@ -30,7 +30,7 @@ static int _add_tag(char *inst_str,
 static void _translate_code(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	int ret;
-	for (int i = 0; i < array_size(_translate_insts); i++) {
+	for (int i = 0; i < array_size(armv8_insts); i++) {
 		if (strstr(inst->string, armv8_insts[i].inst) == inst->string) {
 			ret = armv8_insts[i].translate(inst, str, str_cnt, len);
 			if (ret) {

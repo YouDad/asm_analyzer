@@ -29,7 +29,7 @@ static struct asm_inst armv8_insts[] = {
 	{"add\t", _translate_add, },
 	{"adrp\t", _translate_adrp, },
 	{"adr\t", _translate_adr, },
-	{"b_cond\t", _translate_b_cond, },
+	{"b.", _translate_b_cond, },
 	{"bl\t", _translate_bl, },
 	{"b\t", _translate_b, },
 	{"cbnz\t", _translate_cbnz, },

@@ -1,6 +1,6 @@
 #pragma once
 #include "types/instruction.h"
-#include "utils/color.h"
+#include "utils/insts.h"
 #include "types/bool.h"
 
 static inline int _translate_ldp(const struct instruction *inst, char *str, int *str_cnt, int len)
@@ -9,7 +9,6 @@ static inline int _translate_ldp(const struct instruction *inst, char *str, int 
 	int ret, imm;
 	bool wback, postindex;
 
-	*str_cnt += snprintf(&str[*str_cnt], len, "\t%x:\t", inst->addr);
 	if (strstr(inst->string, "],") != NULL) {
 		// rt1, rt2, [rn], #imm
 		ret = sscanf(inst->string, "%*s\t"
@@ -48,35 +47,13 @@ static inline int _translate_ldp(const struct instruction *inst, char *str, int 
 
 	bool first = true;
 	if (wback && !postindex) {
-		if (!first) {
-			*str_cnt += snprintf(&str[*str_cnt], len, "\n\t%x:\t", inst->addr);
-		}
-		first = false;
-		*str_cnt += snprintf(&str[*str_cnt], len,
-				_green("%s += %d;"), rn, imm);
+		addr_printf("%s += %d;", rn, imm);
 		imm = 0;
 	}
-	if (!first) {
-		*str_cnt += snprintf(&str[*str_cnt], len, "\n\t%x:\t", inst->addr);
-	}
-	first = false;
-	*str_cnt += snprintf(&str[*str_cnt], len,
-			_green("%s = (uint%d_t *)%s[%d];"),
-			rt1, datasize, rn, imm * 8 / datasize);
-	if (!first) {
-		*str_cnt += snprintf(&str[*str_cnt], len, "\n\t%x:\t", inst->addr);
-	}
-	first = false;
-	*str_cnt += snprintf(&str[*str_cnt], len,
-			_green("%s = (uint%d_t *)%s[%d];"),
-			rt2, datasize, rn, imm * 8 / datasize + 1);
+	addr_printf("%s = (uint%d_t *)%s[%d];", rt1, datasize, rn, imm * 8 / datasize);
+	addr_printf("%s = (uint%d_t *)%s[%d];", rt2, datasize, rn, imm * 8 / datasize + 1);
 	if (wback && postindex) {
-		if (!first) {
-			*str_cnt += snprintf(&str[*str_cnt], len, "\n\t%x:\t", inst->addr);
-		}
-		first = false;
-		*str_cnt += snprintf(&str[*str_cnt], len,
-				_green("%s += %d;"), rn, imm);
+		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;
 }

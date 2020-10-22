@@ -1,6 +1,6 @@
 #pragma once
 #include "types/instruction.h"
-#include "utils/color.h"
+#include "utils/insts.h"
 
 static inline int _translate_b_cond(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
@@ -22,8 +22,6 @@ static inline int _translate_b_cond(const struct instruction *inst, char *str, i
 		}
 	}
 
-	*str_cnt += snprintf(&str[*str_cnt], len, "\t%x:\t", inst->addr);
-	*str_cnt += snprintf(&str[*str_cnt], len,
-			_green("if %s then goto "), mean[i]);
+	addr_printf("if %s then goto ", mean[i]);
 	return 0;
 }

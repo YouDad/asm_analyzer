@@ -1,6 +1,6 @@
 #pragma once
 #include "types/instruction.h"
-#include "utils/color.h"
+#include "utils/insts.h"
 
 static inline int _translate_sub(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
@@ -12,13 +12,9 @@ static inline int _translate_sub(const struct instruction *inst, char *str, int 
 			"%[^,], %[^,], %[^,]%[^.]",
 			rd, rn, rmimm, other);
 	if (ret == 3) {
-		*str_cnt += snprintf(&str[*str_cnt], len, "\t%x:\t", inst->addr);
-		*str_cnt += snprintf(&str[*str_cnt], len,
-				_green("%s = %s - %s;"),
+		addr_printf("%s = %s - %s;",
 				rd, rn, rmimm[0] == '#' ? &rmimm[1] : rmimm);
 		return 0;
-	} else {
-		return 1;
 	}
 
 	int shift = 0;
@@ -52,14 +48,10 @@ static inline int _translate_sub(const struct instruction *inst, char *str, int 
 	}
 
 	if (shift) {
-		*str_cnt += snprintf(&str[*str_cnt], len, "\t%x:\t", inst->addr);
-		*str_cnt += snprintf(&str[*str_cnt], len,
-				_green("%s = %s - (%s%s)(%s << %d);"),
+		addr_printf("%s = %s - (%s%s)(%s << %d);",
 				rd, rn, extend[0] == 'u' ? "u" : "", types, rmimm, shift);
 	} else {
-		*str_cnt += snprintf(&str[*str_cnt], len, "\t%x:\t", inst->addr);
-		*str_cnt += snprintf(&str[*str_cnt], len,
-				_green("%s = %s - (%s%s)%s;"),
+		addr_printf("%s = %s - (%s%s)%s;",
 				rd, rn, extend[0] == 'u' ? "u" : "", types, rmimm);
 	}
 	return 0;
