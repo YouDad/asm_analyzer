@@ -10,6 +10,6 @@ static inline int _translate_cbnz(const struct instruction *inst, char *str, int
 		return 1;
 	}
 
-	addr_printf("if %s != 0 then goto text_0x%s();", rt, addr);
+	addr_printf("if %s != 0 then goto ", rt);
 	return 0;
 }

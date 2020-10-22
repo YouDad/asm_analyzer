@@ -14,12 +14,12 @@ static int _add_tag(char *inst_str,
 	if (ret == 0 && _addrs) {
 		for (int i = 0; i < _used; i++) {
 			if (_addrs[i] == jump_addr) {
-				*str_cnt += snprintf(&str[*str_cnt], len, "<%db>", i);
+				*str_cnt += snprintf(&str[*str_cnt], len, "%db; // <%db, %x>", i, i, jump_addr);
 			}
 		}
 		for (int i = _used; i < _cnt; i++) {
 			if (_addrs[i] == jump_addr) {
-				*str_cnt += snprintf(&str[*str_cnt], len, "<%df>", i);
+				*str_cnt += snprintf(&str[*str_cnt], len, "%df; // <%df, %x>", i, i, jump_addr);
 			}
 		}
 	}
