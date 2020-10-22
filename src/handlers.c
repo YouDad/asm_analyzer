@@ -77,14 +77,13 @@ int handle_load(char *args)
 	}
 
 	int ret = decoder_load(filename);
-	printf("load file: %s\n", filename);
-
-	if (!ret) {
-		is_loaded = true;
-	} else {
-		is_loaded = false;
+	if (ret) {
+		perror(filename);
+		return ret;
 	}
 
+	printf("load file: %s\n", filename);
+	is_loaded = true;
 	return ret;
 }
 
