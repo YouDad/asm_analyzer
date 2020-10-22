@@ -47,12 +47,13 @@ static inline int _translate_ldp(const struct instruction *inst, char *str, int 
 
 	bool first = true;
 	if (wback && !postindex) {
-		addr_printf("%s += %d;", rn, imm);
+		addr_printf("%s += %d;\n", rn, imm);
 		imm = 0;
 	}
-	addr_printf("%s = (uint%d_t *)%s[%d];", rt1, datasize, rn, imm * 8 / datasize);
+	addr_printf("%s = (uint%d_t *)%s[%d];\n", rt1, datasize, rn, imm * 8 / datasize);
 	addr_printf("%s = (uint%d_t *)%s[%d];", rt2, datasize, rn, imm * 8 / datasize + 1);
 	if (wback && postindex) {
+		str_printf(str, str_cnt, len, "\n");
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;

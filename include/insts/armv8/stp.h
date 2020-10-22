@@ -47,12 +47,13 @@ static inline int _translate_stp(const struct instruction *inst, char *str, int 
 
 	bool first = true;
 	if (wback && !postindex) {
-		addr_printf("%s += %d;", rn, imm);
+		addr_printf("%s += %d;\n", rn, imm);
 		imm = 0;
 	}
-	addr_printf("(uint%d_t *)%s[%d] = %s;", datasize, rn, imm * 8 / datasize, rt1);
+	addr_printf("(uint%d_t *)%s[%d] = %s;\n", datasize, rn, imm * 8 / datasize, rt1);
 	addr_printf("(uint%d_t *)%s[%d] = %s;", datasize, rn, imm * 8 / datasize + 1, rt2);
 	if (wback && postindex) {
+		str_printf(str, str_cnt, len, "\n");
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;
