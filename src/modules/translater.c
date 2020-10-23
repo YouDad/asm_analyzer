@@ -81,6 +81,7 @@ int translate(struct list_head *iblist, char *str, int len)
 			jump_addrs[jump_addr_cnt++] = uint32_list_pop(&jump_addr_list);
 		}
 
+		// sort
 		for (int i = 0; i < jump_addr_cnt; i++) {
 			for (int j = 0; j < i + 1; j++) {
 				if (jump_addrs[i] < jump_addrs[j]) {
@@ -88,6 +89,17 @@ int translate(struct list_head *iblist, char *str, int len)
 					jump_addrs[i] = jump_addrs[j];
 					jump_addrs[j] = tmp;
 				}
+			}
+		}
+
+		// uniq
+		for (int i = 0; i < jump_addr_cnt - 1; i++) {
+			if (jump_addrs[i] == jump_addrs[i+1]) {
+				for (int j = i+1; j < jump_addr_cnt - 1; j++) {
+					jump_addrs[j] = jump_addrs[j+1];
+				}
+				i--;
+				jump_addr_cnt--;
 			}
 		}
 	}
