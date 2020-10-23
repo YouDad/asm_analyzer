@@ -17,13 +17,12 @@ static const char *_test_result_sub[] = {
 
 static inline int _translate_sub(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	// rd, rn, rm{, extend {#amount}}
-	// rd, rn, imm{, shift}
-	// rd, rn, rm{, shift}
+	// rd, rn, #imm{, lsl #0/#12}
+	// rd, rn, rm{, lsl/lsr/asr #amount}
+	// rd, rn, rm{, extend{ #amount}}
 	char rd[8], rn[8], rmimm[20], other[20];
 	int ret = sscanf(inst->string, "%*s\t"
-			"%[^,], %[^,], %[^,]%[^.]",
-			rd, rn, rmimm, other);
+			"%[^,], %[^,], %[^,]%[^.]", rd, rn, rmimm, other);
 	if (ret == 3) {
 		addr_printf("%s = %s - %s;",
 				rd, rn, rmimm[0] == '#' ? &rmimm[1] : rmimm);

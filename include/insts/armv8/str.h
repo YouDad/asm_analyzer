@@ -4,29 +4,35 @@
 #include "types/bool.h"
 
 static const char *_test_inst_str[] = {
-	"str\tx0, [sp, #16]", 0,
+	"str\tx0, [sp], #8", 0,
+	"str\tx1, [sp, #-16]!", 0,
+	"str\tx2, [sp, #48]", 0,
 };
 static const char *_test_result_str[] = {
-	"(uint64_t *)sp[2] = x0;", 0,
+	"(uint64_t *)sp[0] = x0;",
+	"sp += 8;", 0,
+	"sp += -16;",
+	"(uint64_t *)sp[0] = x1;", 0,
+	"(uint64_t *)sp[6] = x2;", 0,
 };
 
 static inline int _translate_str(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	char rt[8], rn[8], other[20];
 	int ret, imm;
-	bool wback, postindex;
+	bool preindex, postindex;
 
 	if (strstr(inst->string, "],") != NULL) {
 		// rt, [rn], #imm
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^]]], #%d", rt, rn, &imm);
-		wback = true;
+		preindex = false;
 		postindex = true;
 	} else if (strstr(inst->string, "]!") != NULL) {
 		// rt, [rn, #imm]!
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^,], #%d]!", rt, rn, &imm);
-		wback = true;
+		preindex = true;
 		postindex = false;
 	} else {
 		// rt, [rn{, #imm}]
@@ -38,7 +44,7 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 			imm = 0;
 		}
 
-		wback = false;
+		preindex = false;
 		postindex = false;
 	}
 
@@ -52,13 +58,17 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 		datasize = 64;
 	}
 
-	bool first = true;
-	if (wback && !postindex) {
-		addr_printf("%s += %d;", rn, imm);
+	if (preindex) {
+		addr_printf("%s += %d;\n", rn, imm);
 		imm = 0;
 	}
-	addr_printf("(uint%d_t *)%s[%d] = %s;", datasize, rn, imm * 8 / datasize, rt);
-	if (wback && postindex) {
+
+	if (!postindex) {
+		addr_printf("(uint%d_t *)%s[%d] = %s;", datasize, rn, imm * 8 / datasize, rt);
+	}
+
+	if (postindex) {
+		addr_printf("(uint%d_t *)%s[0] = %s;", datasize, rn, rt);
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;

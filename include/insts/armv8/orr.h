@@ -2,13 +2,27 @@
 #include "types/instruction.h"
 #include "utils/insts.h"
 
-static const char *_test_inst_orr[] = {};
-static const char *_test_result_orr[] = {};
+static const char *_test_inst_orr[] = {
+	"orr\tx5, x1, #0x3", 0,
+	"orr\tx5, x1, x0", 0,
+	"orr\tx5, x1, x0, lsl #12", 0,
+	"orr\tx5, x1, x0, lsr #12", 0,
+	"orr\tx5, x1, x0, asr #12", 0,
+	"orr\tx5, x1, x0, ror #12", 0,
+};
+static const char *_test_result_orr[] = {
+	"x5 = x1 | 0x3;", 0,
+	"x5 = x1 | x0;", 0,
+	"x5 = x1 | (x0 << 12);", 0,
+	"x5 = x1 | (x0 >> 12);", 0,
+	"x5 = x1 | (x0 / (1 << 12));", 0,
+	"x5 = x1 | ((x0 >> 12) | ((x0 & 0xfff) << 52));", 0,
+};
 
 static inline int _translate_orr(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
-	// rd, rn, imm
-	// rd, rn, rm{, shift #amount}
+	// rd, rn, #imm
+	// rd, rn, rm{, lsl/lsr/asr/ror #amount}
 
 	int ret;
 	if (strstr(inst->string, ", #") != NULL) {
@@ -46,7 +60,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 		} else if (strcmp(shift, "ror") == 0) {
 			int _amount;
 			sscanf(amount, "%d", &_amount);
-			addr_printf("%s = %s | ((%s >> %d) | ((%s & %x) << %d));", rd, rn, rm, _amount, rm, (1 << _amount) - 1, 64 - _amount);
+			addr_printf("%s = %s | ((%s >> %d) | ((%s & 0x%x) << %d));", rd, rn, rm, _amount, rm, (1 << _amount) - 1, 64 - _amount);
 		} else {
 			return 1;
 		}
