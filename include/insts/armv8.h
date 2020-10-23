@@ -15,6 +15,7 @@
 #include "armv8/mrs.h"
 #include "armv8/msr.h"
 #include "armv8/orr.h"
+#include "armv8/ret.h"
 #include "armv8/stp.h"
 #include "armv8/str.h"
 #include "armv8/sub.h"
@@ -51,6 +52,7 @@ static struct asm_inst armv8_insts[] = {
 	DEFINE_INSTRUCTION("mrs\t",  mrs),
 	DEFINE_INSTRUCTION("msr\t",  msr),
 	DEFINE_INSTRUCTION("orr\t",  orr),
+	DEFINE_INSTRUCTION("ret\0",  ret),
 	DEFINE_INSTRUCTION("stp\t",  stp),
 	DEFINE_INSTRUCTION("str\t",  str),
 	DEFINE_INSTRUCTION("sub\t",  sub),
