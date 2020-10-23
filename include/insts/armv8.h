@@ -19,6 +19,8 @@
 #include "armv8/stp.h"
 #include "armv8/str.h"
 #include "armv8/sub.h"
+#include "armv8/tbz.h"
+#include "armv8/tbnz.h"
 
 typedef int (*translate_func_t)(const struct instruction *inst, char *str, int *str_cnt, int len);
 
@@ -56,4 +58,6 @@ static struct asm_inst armv8_insts[] = {
 	DEFINE_INSTRUCTION("stp\t",  stp),
 	DEFINE_INSTRUCTION("str\t",  str),
 	DEFINE_INSTRUCTION("sub\t",  sub),
+	DEFINE_INSTRUCTION("tbz\t",  tbz),
+	DEFINE_INSTRUCTION("tbnz\t", tbnz),
 };
