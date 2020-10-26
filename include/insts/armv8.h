@@ -7,6 +7,7 @@
 #include "armv8/bl.h"
 #include "armv8/cbnz.h"
 #include "armv8/cbz.h"
+#include "armv8/cmp.h"
 #include "armv8/ldp.h"
 #include "armv8/ldrb.h"
 #include "armv8/ldr.h"
@@ -47,6 +48,7 @@ static struct asm_inst armv8_insts[] = {
 	DEFINE_INSTRUCTION("b\t",    b),
 	DEFINE_INSTRUCTION("cbnz\t", cbnz),
 	DEFINE_INSTRUCTION("cbz\t",  cbz),
+	DEFINE_INSTRUCTION("cmp\t",  cmp),
 	DEFINE_INSTRUCTION("ldp\t",  ldp),
 	DEFINE_INSTRUCTION("ldrb\t", ldrb),
 	DEFINE_INSTRUCTION("ldr\t",  ldr),

@@ -1,5 +1,6 @@
 #pragma once
 #include <stdio.h>
+#include <string.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include "types/bool.h"
@@ -62,3 +63,6 @@ static inline const char *ext(const char *extend, bool bit_64)
 
 	return "unknown";
 }
+
+void set_cmp(uint32_t addr, char *r1, char *r2);
+bool get_cmp(uint32_t *addr, char r1[], char r2[]);

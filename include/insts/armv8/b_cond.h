@@ -18,6 +18,20 @@ static const char *_test_inst_b_cond[] = {
 	"b.gt\td9c", 0,
 	"b.le\td9c", 0,
 	"b.aa\td9c", 0,
+	"cmp\tx0, x1", "b.eq\td9c", 0,
+	"cmp\tx0, x1", "b.ne\td9c", 0,
+	"cmp\tx0, x1", "b.cs\td9c", 0,
+	"cmp\tx0, x1", "b.cc\td9c", 0,
+	"cmp\tx0, x1", "b.mi\td9c", 0,
+	"cmp\tx0, x1", "b.pl\td9c", 0,
+	"cmp\tx0, x1", "b.vs\td9c", 0,
+	"cmp\tx0, x1", "b.vc\td9c", 0,
+	"cmp\tx0, x1", "b.hi\td9c", 0,
+	"cmp\tx0, x1", "b.ls\td9c", 0,
+	"cmp\tx0, x1", "b.ge\td9c", 0,
+	"cmp\tx0, x1", "b.lt\td9c", 0,
+	"cmp\tx0, x1", "b.gt\td9c", 0,
+	"cmp\tx0, x1", "b.le\td9c", 0,
 };
 static const char *_test_result_b_cond[] = {
 	"if == then goto", 0,
@@ -35,6 +49,20 @@ static const char *_test_result_b_cond[] = {
 	"if s> then goto", 0,
 	"if s<= then goto", 0,
 	"if unknown then goto", 0,
+	"if (x0 == x1) goto", 0,
+	"if (x0 != x1) goto", 0,
+	"if (x0 u>= x1) goto", 0,
+	"if (x0 u< x1) goto", 0,
+	"if (x0 <0 x1) goto", 0,
+	"if (x0 >=0 x1) goto", 0,
+	"if (x0 overflow x1) goto", 0,
+	"if (x0 not overflow x1) goto", 0,
+	"if (x0 u> x1) goto", 0,
+	"if (x0 u<= x1) goto", 0,
+	"if (x0 s>= x1) goto", 0,
+	"if (x0 s< x1) goto", 0,
+	"if (x0 s> x1) goto", 0,
+	"if (x0 s<= x1) goto", 0,
 };
 
 static inline int _translate_b_cond(const struct instruction *inst, char *str, int *str_cnt, int len)
@@ -45,8 +73,7 @@ static inline int _translate_b_cond(const struct instruction *inst, char *str, i
 		return 1;
 	}
 
-	const char *cond[] = {"eq", "ne", "cs", "cc", "mi",
-		"pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le"};
+	const char *cond[] = {"eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le"};
 	const char *mean[] = {"==", "!=", "u>=", "u<", "<0", ">=0",
 		"overflow", "not overflow", "u>", "u<=", "s>=", "s<", "s>", "s<=", "unknown"};
 
@@ -57,6 +84,12 @@ static inline int _translate_b_cond(const struct instruction *inst, char *str, i
 		}
 	}
 
-	addr_printf("if %s then goto ", mean[i]);
+	char r1[20], r2[20];
+	uint32_t address;
+	if (get_cmp(&address, r1, r2)) {
+		addr_printf("if (%s %s %s) goto ", r1, mean[i], r2);
+	} else {
+		addr_printf("if %s then goto ", mean[i]);
+	}
 	return 0;
 }
