@@ -16,5 +16,5 @@ static inline int _translate_cmp(const struct instruction *inst, char *str, int 
 	}
 
 	set_cmp(inst->addr, r, rimm);
-	return 0;
+	return 1;
 }
