@@ -1,5 +1,6 @@
 #pragma once
 #include "armv8/add.h"
+#include "armv8/and.h"
 #include "armv8/adr.h"
 #include "armv8/adrp.h"
 #include "armv8/b_cond.h"
@@ -44,6 +45,7 @@ struct asm_inst {
 
 static struct asm_inst armv8_insts[] = {
 	DEFINE_INSTRUCTION("add\t",  add),
+	DEFINE_INSTRUCTION("and\t",  and),
 	DEFINE_INSTRUCTION("adrp\t", adrp),
 	DEFINE_INSTRUCTION("adr\t",  adr),
 	DEFINE_INSTRUCTION("b.",     b_cond),
