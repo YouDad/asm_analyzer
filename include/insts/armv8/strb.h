@@ -43,7 +43,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^]]], #%d", rt, rn, &imm);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 
 		preindex = false;
@@ -53,7 +53,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^,], #%d]!", rt, rn, &imm);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 
 		preindex = true;
@@ -64,7 +64,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^],]%[^.]", rt, rn, other);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 
 		if (other[0] == ',') {
@@ -83,7 +83,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 					if (have_imm) {
 						ret = sscanf(other, ", %[^,], %s #%[^]]]", rm, extend, amount);
 						if (ret != 3) {
-							return 1;
+							return -1;
 						}
 
 						addr_printf("((uint8_t *)%s)[(%s)(%s << %s)] = %s;",
@@ -91,7 +91,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 					} else {
 						ret = sscanf(other, ", %[^,], %s]", rm, extend);
 						if (ret != 2) {
-							return 1;
+							return -1;
 						}
 
 						addr_printf("((uint8_t *)%s)[(%s)(%s)] = %s;",
@@ -100,7 +100,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 				} else {
 					ret = sscanf(other, ", %[^]]]", rm);
 					if (ret != 1) {
-						return 1;
+						return -1;
 					}
 
 					addr_printf("((uint8_t *)%s)[%s] = %s;", rn, rm, rt);

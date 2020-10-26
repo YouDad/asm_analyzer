@@ -15,7 +15,7 @@ static inline int _translate_cbz(const struct instruction *inst, char *str, int 
 	char rt[8], label[20];
 	int ret = sscanf(inst->string, "%*s\t" "%[^,], %s", rt, label);
 	if (ret != 2) {
-		return 1;
+		return -1;
 	}
 
 	addr_printf("if (!%s) goto ", rt);

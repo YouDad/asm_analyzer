@@ -27,16 +27,19 @@ static int _add_tag(char *inst_str,
 	return 0;
 }
 
-static void _translate_code(const struct instruction *inst, char *str, int *str_cnt, int len)
+static int _translate_code(const struct instruction *inst, char *str, int *str_cnt, int len)
 {
 	int ret;
 	for (int i = 0; i < array_size(armv8_insts); i++) {
 		if (strstr(inst->string, armv8_insts[i].inst) == inst->string) {
 			ret = armv8_insts[i].translate(inst, str, str_cnt, len);
-			if (ret) {
-				printf("%s failed\n", inst->string);
+			if (ret < 0) {
+				warn("%s failed", inst->string);
 			}
-			return;
+			if (ret > 0) {
+				return ret;
+			}
+			return 0;
 		}
 	}
 
@@ -48,6 +51,7 @@ static void _translate_code(const struct instruction *inst, char *str, int *str_
 		}
 		str[(*str_cnt)++] = *(p++);
 	}
+	return 0;
 }
 
 int translate(struct list_head *iblist, char *str, int len)
@@ -114,14 +118,16 @@ int translate(struct list_head *iblist, char *str, int len)
 				str_cnt += snprintf(&str[str_cnt], len, "%d:\n", used_cnt++);
 			}
 
-			_translate_code(&ib->ip[i], str, &str_cnt, len);
+			int ret = _translate_code(&ib->ip[i], str, &str_cnt, len);
 
 			_add_tag(ib->ip[i].string, jump_addrs,
 					used_cnt, jump_addr_cnt, str, &str_cnt, len);
 
 			// \n
-			str[str_cnt++] = '\n';
-			str[str_cnt] = 0;
+			if (ret == 0) {
+				str[str_cnt++] = '\n';
+				str[str_cnt] = 0;
+			}
 		}
 		list_del(&ib->list);
 		release_instruction_block(ib);

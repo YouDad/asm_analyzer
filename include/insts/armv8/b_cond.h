@@ -98,7 +98,7 @@ static inline int _translate_b_cond(const struct instruction *inst, char *str, i
 	char op[8], addr[20];
 	int ret = sscanf(inst->string, "b.%s\t" "%s", op, addr);
 	if (ret != 2) {
-		return 1;
+		return -1;
 	}
 
 	const char *cond[] = {"eq", "ne", "cs", "cc", "mi", "pl", "vs", "vc", "hi", "ls", "ge", "lt", "gt", "le"};

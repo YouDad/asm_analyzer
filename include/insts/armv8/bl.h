@@ -15,7 +15,7 @@ static inline int _translate_bl(const struct instruction *inst, char *str, int *
 	char addr[20];
 	int ret = sscanf(inst->string, "%*s\t" "%s", addr);
 	if (ret != 1) {
-		return 1;
+		return -1;
 	}
 
 	addr_printf("text_0x%s();", addr);

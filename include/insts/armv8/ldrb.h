@@ -37,7 +37,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^]]], #%d", rt, rn, &imm);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 		preindex = false;
 		postindex = true;
@@ -46,7 +46,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^,], #%d]!", rt, rn, &imm);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 		preindex = true;
 		postindex = false;
@@ -55,7 +55,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 		ret = sscanf(inst->string, "%*s\t"
 				"%[^,], [%[^],]%[^.]", rt, rn, other);
 		if (ret != 3) {
-			return 1;
+			return -1;
 		}
 		if (other[0] == ',') {
 			// rt, [rn, #imm]
@@ -71,7 +71,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 						// rt, [rn, rm, extend #amount]
 
 						ret = sscanf(other, ", %[^,], %s #%[^]]]", rm, extend, amount);
-						if (ret != 3) return 1;
+						if (ret != 3) return -1;
 						int datasize = 32;
 						if (extend[3] == 'x') {
 							datasize = 64;
@@ -82,7 +82,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 						// rt, [rn, rm, extend]
 
 						ret = sscanf(other, ", %[^,], %[^]]]", rm, extend);
-						if (ret != 2) return 1;
+						if (ret != 2) return -1;
 						int datasize = 32;
 						if (extend[3] == 'x') {
 							datasize = 64;
@@ -95,14 +95,14 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 					// rt, [rn, rm, lsl #amount]
 
 					ret = sscanf(other, ", %[^,], lsl #%[^]]]", rm, amount);
-					if (ret != 2) return 1;
+					if (ret != 2) return -1;
 					addr_printf("%s = ((uint8_t *)%s)[%s << %s];", rt, rn, rm, amount);
 					return 0;
 				} else {
 					// rt, [rn, rm]
 
 					ret = sscanf(other, ", %[^]]]", rm);
-					if (ret != 1) return 1;
+					if (ret != 1) return -1;
 					addr_printf("%s = ((uint8_t *)%s)[%s];", rt, rn, rm);
 					return 0;
 				}
@@ -111,7 +111,7 @@ static inline int _translate_ldrb(const struct instruction *inst, char *str, int
 			// rt, [rn]
 			imm = 0;
 		} else {
-			return 1;
+			return -1;
 		}
 
 		preindex = false;

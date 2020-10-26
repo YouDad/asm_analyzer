@@ -16,7 +16,7 @@ static inline int _translate_tbnz(const struct instruction *inst, char *str, int
 	int ret = sscanf(inst->string, "%*s\t"
 			"%[^,], #%[^,],", rt, imm);
 	if (ret != 2) {
-		return 1;
+		return -1;
 	}
 
 	addr_printf("if (%s & (1 << %s)) goto ", rt, imm);

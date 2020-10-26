@@ -43,12 +43,12 @@ static inline int _translate_add(const struct instruction *inst, char *str, int 
 	if (strstr(other, "#") != NULL) {
 		ret = sscanf(other, ", %s #%d", extend, &shift);
 		if (ret != 2) {
-			return 1;
+			return -1;
 		}
 	} else {
 		ret = sscanf(other, ", %s", extend);
 		if (ret != 1) {
-			return 1;
+			return -1;
 		}
 	}
 

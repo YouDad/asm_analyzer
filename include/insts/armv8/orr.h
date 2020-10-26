@@ -33,7 +33,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 			addr_printf("%s = %s | %s;", rd, rn, imm);
 			return 0;
 		} else {
-			return 1;
+			return -1;
 		}
 	} else {
 		char rd[8], rn[8], rm[8], other[20];
@@ -48,7 +48,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 		char shift[8], amount[8];
 		ret = sscanf(other, ", %s #%s", shift, amount);
 		if (ret != 2) {
-			return 1;
+			return -1;
 		}
 
 		if (strcmp(shift, "lsl") == 0) {
@@ -62,7 +62,7 @@ static inline int _translate_orr(const struct instruction *inst, char *str, int 
 			sscanf(amount, "%d", &_amount);
 			addr_printf("%s = %s | ((%s >> %d) | ((%s & 0x%x) << %d));", rd, rn, rm, _amount, rm, (1 << _amount) - 1, 64 - _amount);
 		} else {
-			return 1;
+			return -1;
 		}
 		return 0;
 	}

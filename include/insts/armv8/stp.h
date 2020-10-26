@@ -52,7 +52,7 @@ static inline int _translate_stp(const struct instruction *inst, char *str, int 
 	}
 
 	if (ret != 4) {
-		return 1;
+		return -1;
 	}
 
 	int datasize = rt1[0] == 'x' ? 64 : 32;

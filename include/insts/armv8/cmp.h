@@ -12,7 +12,7 @@ static inline int _translate_cmp(const struct instruction *inst, char *str, int 
 	char r[20], rimm[20];
 	int ret = sscanf(inst->string, "%*s\t" "%[^,], %s", r, rimm);
 	if (ret != 2) {
-		return 1;
+		return -1;
 	}
 
 	set_cmp(inst->addr, r, rimm);

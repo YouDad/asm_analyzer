@@ -53,7 +53,7 @@ static inline int _translate_ldp(const struct instruction *inst, char *str, int 
 
 	if (ret != 4) {
 		printf("%s\n%d: %s, %s, %s, %d\n", inst->string, ret, rt1, rt2, rn, imm);
-		return 1;
+		return -1;
 	}
 
 	int datasize = 32;
