@@ -14,6 +14,8 @@
 #include "armv8/ldp.h"
 #include "armv8/ldrb.h"
 #include "armv8/ldr.h"
+#include "armv8/lsl.h"
+#include "armv8/lsr.h"
 #include "armv8/mov.h"
 #include "armv8/movk.h"
 #include "armv8/mrs.h"
@@ -59,6 +61,8 @@ static struct asm_inst armv8_insts[] = {
 	DEFINE_INSTRUCTION("ldp\t",  ldp),
 	DEFINE_INSTRUCTION("ldrb\t", ldrb),
 	DEFINE_INSTRUCTION("ldr\t",  ldr),
+	DEFINE_INSTRUCTION("lsl\t",  lsl),
+	DEFINE_INSTRUCTION("lsr\t",  lsr),
 	DEFINE_INSTRUCTION("movk\t", movk),
 	DEFINE_INSTRUCTION("mov\t",  mov),
 	DEFINE_INSTRUCTION("mrs\t",  mrs),
