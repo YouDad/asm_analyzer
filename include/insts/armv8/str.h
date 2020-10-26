@@ -15,17 +15,17 @@ static const char *_test_inst_str[] = {
 	"str\tx4, [x1, w6]", 0,
 };
 static const char *_test_result_str[] = {
-	"(uint64_t *)sp[0] = x0;",
+	"((uint64_t *)sp)[0] = x0;",
 	"sp += 8;", 0,
 	"sp += -16;",
-	"(uint64_t *)sp[0] = x1;", 0,
-	"(uint64_t *)sp[6] = x2;", 0,
-	"(uint64_t *)x1[(uint64_t)(w6 << 3)] = x4;", 0,
-	"(uint64_t *)x1[(uint32_t)(w6 << 3)] = x4;", 0,
-	"(uint64_t *)x1[(int64_t)(w6 << 3)] = x4;", 0,
-	"(uint64_t *)x1[(int32_t)(w6 << 3)] = x4;", 0,
-	"(uint64_t *)x1[(int32_t)(w6)] = x4;", 0,
-	"(uint64_t *)x1[w6] = x4;", 0,
+	"((uint64_t *)sp)[0] = x1;", 0,
+	"((uint64_t *)sp)[6] = x2;", 0,
+	"((uint64_t *)x1)[(uint64_t)(w6 << 3)] = x4;", 0,
+	"((uint64_t *)x1)[(uint32_t)(w6 << 3)] = x4;", 0,
+	"((uint64_t *)x1)[(int64_t)(w6 << 3)] = x4;", 0,
+	"((uint64_t *)x1)[(int32_t)(w6 << 3)] = x4;", 0,
+	"((uint64_t *)x1)[(int32_t)(w6)] = x4;", 0,
+	"((uint64_t *)x1)[w6] = x4;", 0,
 };
 
 // rt, [rn], #imm
@@ -91,7 +91,7 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 							return 1;
 						}
 
-						addr_printf("(uint%d_t *)%s[(%s)(%s << %s)] = %s;",
+						addr_printf("((uint%d_t *)%s)[(%s)(%s << %s)] = %s;",
 								datasize, rn, ext(extend, true), rm, amount, rt);
 					} else {
 						ret = sscanf(other, ", %[^,], %s]", rm, extend);
@@ -99,7 +99,7 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 							return 1;
 						}
 
-						addr_printf("(uint%d_t *)%s[(%s)(%s)] = %s;",
+						addr_printf("((uint%d_t *)%s)[(%s)(%s)] = %s;",
 								datasize, rn, ext(extend, true), rm, rt);
 					}
 				} else {
@@ -108,7 +108,7 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 						return 1;
 					}
 
-					addr_printf("(uint%d_t *)%s[%s] = %s;", datasize, rn, rm, rt);
+					addr_printf("((uint%d_t *)%s)[%s] = %s;", datasize, rn, rm, rt);
 				}
 				return 0;
 			}
@@ -131,11 +131,11 @@ static inline int _translate_str(const struct instruction *inst, char *str, int 
 	}
 
 	if (!postindex) {
-		addr_printf("(uint%d_t *)%s[%d] = %s;", datasize, rn, imm * 8 / datasize, rt);
+		addr_printf("((uint%d_t *)%s)[%d] = %s;", datasize, rn, imm * 8 / datasize, rt);
 	}
 
 	if (postindex) {
-		addr_printf("(uint%d_t *)%s[0] = %s;", datasize, rn, rt);
+		addr_printf("((uint%d_t *)%s)[0] = %s;", datasize, rn, rt);
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;

@@ -9,14 +9,14 @@ static const char *_test_inst_ldp[] = {
 	"ldp\tx4, x5, [sp, #48]", 0,
 };
 static const char *_test_result_ldp[] = {
-	"x0 = (uint64_t *)x6[0];",
-	"x1 = (uint64_t *)x6[1];",
+	"x0 = ((uint64_t *)x6)[0];",
+	"x1 = ((uint64_t *)x6)[1];",
 	"x6 += 32;", 0,
 	"sp += -96;",
-	"x2 = (uint64_t *)sp[0];",
-	"x3 = (uint64_t *)sp[1];", 0,
-	"x4 = (uint64_t *)sp[6];",
-	"x5 = (uint64_t *)sp[7];", 0,
+	"x2 = ((uint64_t *)sp)[0];",
+	"x3 = ((uint64_t *)sp)[1];", 0,
+	"x4 = ((uint64_t *)sp)[6];",
+	"x5 = ((uint64_t *)sp)[7];", 0,
 };
 
 static inline int _translate_ldp(const struct instruction *inst, char *str, int *str_cnt, int len)
@@ -67,13 +67,13 @@ static inline int _translate_ldp(const struct instruction *inst, char *str, int 
 	}
 
 	if (!postindex) {
-		addr_printf("%s = (uint%d_t *)%s[%d];\n", rt1, datasize, rn, imm * 8 / datasize);
-		addr_printf("%s = (uint%d_t *)%s[%d];", rt2, datasize, rn, imm * 8 / datasize + 1);
+		addr_printf("%s = ((uint%d_t *)%s)[%d];\n", rt1, datasize, rn, imm * 8 / datasize);
+		addr_printf("%s = ((uint%d_t *)%s)[%d];", rt2, datasize, rn, imm * 8 / datasize + 1);
 	}
 
 	if (postindex) {
-		addr_printf("%s = (uint%d_t *)%s[0];\n", rt1, datasize, rn);
-		addr_printf("%s = (uint%d_t *)%s[1];\n", rt2, datasize, rn);
+		addr_printf("%s = ((uint%d_t *)%s)[0];\n", rt1, datasize, rn);
+		addr_printf("%s = ((uint%d_t *)%s)[1];\n", rt2, datasize, rn);
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;

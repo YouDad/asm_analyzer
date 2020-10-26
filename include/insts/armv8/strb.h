@@ -15,17 +15,17 @@ static const char *_test_inst_strb[] = {
 	"strb\tx4, [x1, w6]", 0,
 };
 static const char *_test_result_strb[] = {
-	"(uint8_t *)sp[0] = x0;",
+	"((uint8_t *)sp)[0] = x0;",
 	"sp += 8;", 0,
 	"sp += -16;",
-	"(uint8_t *)sp[0] = x1;", 0,
-	"(uint8_t *)sp[48] = x2;", 0,
-	"(uint8_t *)x1[(uint64_t)(w6 << 3)] = x4;", 0,
-	"(uint8_t *)x1[(uint32_t)(w6 << 3)] = x4;", 0,
-	"(uint8_t *)x1[(int64_t)(w6 << 3)] = x4;", 0,
-	"(uint8_t *)x1[(int32_t)(w6 << 3)] = x4;", 0,
-	"(uint8_t *)x1[(int32_t)(w6)] = x4;", 0,
-	"(uint8_t *)x1[w6] = x4;", 0,
+	"((uint8_t *)sp)[0] = x1;", 0,
+	"((uint8_t *)sp)[48] = x2;", 0,
+	"((uint8_t *)x1)[(uint64_t)(w6 << 3)] = x4;", 0,
+	"((uint8_t *)x1)[(uint32_t)(w6 << 3)] = x4;", 0,
+	"((uint8_t *)x1)[(int64_t)(w6 << 3)] = x4;", 0,
+	"((uint8_t *)x1)[(int32_t)(w6 << 3)] = x4;", 0,
+	"((uint8_t *)x1)[(int32_t)(w6)] = x4;", 0,
+	"((uint8_t *)x1)[w6] = x4;", 0,
 };
 
 // rt, [rn], #imm
@@ -86,7 +86,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 							return 1;
 						}
 
-						addr_printf("(uint8_t *)%s[(%s)(%s << %s)] = %s;",
+						addr_printf("((uint8_t *)%s)[(%s)(%s << %s)] = %s;",
 								rn, ext(extend, true), rm, amount, rt);
 					} else {
 						ret = sscanf(other, ", %[^,], %s]", rm, extend);
@@ -94,7 +94,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 							return 1;
 						}
 
-						addr_printf("(uint8_t *)%s[(%s)(%s)] = %s;",
+						addr_printf("((uint8_t *)%s)[(%s)(%s)] = %s;",
 								rn, ext(extend, true), rm, rt);
 					}
 				} else {
@@ -103,7 +103,7 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 						return 1;
 					}
 
-					addr_printf("(uint8_t *)%s[%s] = %s;", rn, rm, rt);
+					addr_printf("((uint8_t *)%s)[%s] = %s;", rn, rm, rt);
 				}
 				return 0;
 			}
@@ -121,11 +121,11 @@ static inline int _translate_strb(const struct instruction *inst, char *str, int
 	}
 
 	if (!postindex) {
-		addr_printf("(uint8_t *)%s[%d] = %s;", rn, imm, rt);
+		addr_printf("((uint8_t *)%s)[%d] = %s;", rn, imm, rt);
 	}
 
 	if (postindex) {
-		addr_printf("(uint8_t *)%s[0] = %s;", rn, rt);
+		addr_printf("((uint8_t *)%s)[0] = %s;", rn, rt);
 		addr_printf("%s += %d;", rn, imm);
 	}
 	return 0;

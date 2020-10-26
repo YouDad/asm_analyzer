@@ -6,7 +6,7 @@ static const char *_test_inst_tbnz[] = {
 	"tbnz\tw0, #3, 456", 0,
 };
 static const char *_test_result_tbnz[] = {
-	"if (w0[3]) goto", 0,
+	"if (w0[3]) goto ", 0,
 };
 
 static inline int _translate_tbnz(const struct instruction *inst, char *str, int *str_cnt, int len)
@@ -19,6 +19,6 @@ static inline int _translate_tbnz(const struct instruction *inst, char *str, int
 		return 1;
 	}
 
-	addr_printf("if (%s[%s]) goto", rt, imm);
+	addr_printf("if (%s[%s]) goto ", rt, imm);
 	return 0;
 }

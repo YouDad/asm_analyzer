@@ -6,7 +6,7 @@ static const char *_test_inst_cbz[] = {
 	"cbz\tw0, 123", 0,
 };
 static const char *_test_result_cbz[] = {
-	"if w0 == 0 then goto", 0,
+	"if (!w0) goto ", 0,
 };
 
 static inline int _translate_cbz(const struct instruction *inst, char *str, int *str_cnt, int len)
@@ -18,6 +18,6 @@ static inline int _translate_cbz(const struct instruction *inst, char *str, int 
 		return 1;
 	}
 
-	addr_printf("if %s == 0 then goto ", rt);
+	addr_printf("if (!%s) goto ", rt);
 	return 0;
 }
