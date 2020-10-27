@@ -1194,7 +1194,7 @@ Disassembly of section .text:
     1288:	38764b20 	ldrb	w0, [x25, w22, uxtw]
     128c:	10000062 	adr	x2, 1298 <.text+0x1298>
     1290:	8b208840 	add	x0, x2, w0, sxtb #2
-    1294:	d61f0000 	br	x0
+    1294:	d61f0000 	b	40000 <.text+0x40000>
     1298:	51012463 	sub	w3, w3, #0x49
     129c:	7100c47f 	cmp	w3, #0x31
     12a0:	54001709 	b.ls	1580 <.text+0x1580>  // b.plast
@@ -31025,3 +31025,20 @@ Disassembly of section .text:
    3f774:	00000000 	.inst	0x00000000 ; undefined
    3f778:	00fef002 	.inst	0x00fef002 ; undefined
    3f77c:	00000000 	.inst	0x00000000 ; undefined
+   ...
+   40000:	f100001f 	cmp	x0, #0x0
+   40004:	00000000 	b.eq	128c <.text+0x128c>
+   40008:	f100041f 	cmp	x0, #0x1
+   4000c:	00000000 	b.eq	1258 <.text+0x1258>
+   40010:	f100081f 	cmp	x0, #0x2
+   40014:	00000000 	b.eq	1234 <.text+0x1234>
+   40018:	f1000c1f 	cmp	x0, #0x3
+   4001c:	00000000 	b.eq	1308 <.text+0x1308>
+   40020:	f100101f 	cmp	x0, #0x4
+   40024:	00000000 	b.eq	12f4 <.text+0x12f4>
+   40028:	f100141f 	cmp	x0, #0x5
+   4002c:	00000000 	b.eq	12b4 <.text+0x12b4>
+   40030:	f100181f 	cmp	x0, #0x6
+   40034:	00000000 	b.eq	1298 <.text+0x1298>
+   40038:	f1001c1f 	cmp	x0, #0x7
+   4003c:	00000000 	b.eq	12c4 <.text+0x12c4>
