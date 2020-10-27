@@ -122,6 +122,9 @@ int _get_ib_by_addr(uint32_t addr, bool until_jump, struct uint32_list *aq, stru
 	}
 
 	while (!bitmap_get(&visited, line)) {
+		if (line >= vector_size(lines)) {
+			break;
+		}
 		struct instruction i = get_instruction_by_line(line);
 		vector_push(instrs, i);
 		bitmap_set(&visited, line++);
