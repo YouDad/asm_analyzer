@@ -79,7 +79,7 @@
 	int _val = (val);                                           \
 	if (_cnt > vector_size(id)) {                               \
 		if (_cnt > id##_max) {                                  \
-			id##_max = _cnt * 2;                                \
+			id##_max *= 2;                                      \
 			void *new_ptr = REALLOC(id, typeof(*id), id##_max); \
 			if (!new_ptr) {                                     \
 				error(-ENOMEM, "realloc failed");               \

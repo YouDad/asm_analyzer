@@ -16,8 +16,8 @@ void addr_graph_init()
 	map_init(node2addr);
 	graph_init(&callee);
 	graph_init(&caller);
-	vector_init(in);
-	vector_init(out);
+	vector_struct_init(in);
+	vector_struct_init(out);
 	node_cnt = 0;
 }
 
